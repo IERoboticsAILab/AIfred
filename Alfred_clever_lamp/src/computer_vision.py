@@ -1,32 +1,26 @@
 #!/usr/bin/env python3
 
+''' IMPORT MODULES '''
 import sys
 import os
 import cv2
+import re
 from PIL import Image as PIL_Image
 import google.generativeai as genai
 import mediapipe as mp
-import torch
-import numpy as np
 from dotenv import load_dotenv
-import time
 sys.path.append(os.path.join(os.path.dirname(__file__), '../scripts'))
-from my_functions import alfread_speacks, countFingers, detectHandsLandmarks, Search_Response, Search_Result, search_yt, display_yt_results
+from my_functions import countFingers, detectHandsLandmarks, search_yt, circular_list, open_url, format_math
 import webbrowser
 import googleapiclient.discovery
-from IPython.display import YouTubeVideo, display
-import whisper
-import sounddevice as sd
-from playsound import playsound
-import gtts
-import pychromecast
-import zeroconf
-from pychromecast.controllers.youtube import YouTubeController
-#import threading
-#from queue import Queue
-#import pyautogui # pip install pyautogui # --> for moving in the browser
-
-
+import rospy
+from tf.transformations import euler_from_quaternion
+import geometry_msgs.msg
+from geometry_msgs.msg import PoseStamped
+import math
+import subprocess
+import pyautogui
+import time
 
 ''' SET UP HANDS MODULE '''
 mp_hands = mp.solutions.hands
@@ -36,28 +30,16 @@ mp_drawing = mp.solutions.drawing_utils
 
 
 ''' SET UP YOUTUBE '''
-zconf = zeroconf.Zeroconf()
-chromecasts, browser = pychromecast.get_listed_chromecasts(friendly_names=["Ufficio"])
-if not chromecasts:
-    print("\n\n\n\nNo Chromecast with the given name found.\n\n\n\n")
-    exit()
-cast = chromecasts[0]
-cast.wait()
-print(f"Connected to: {cast.cast_info.friendly_name}")
-yt = YouTubeController()
-cast.register_handler(yt)
-#yt.launch()
+
+
+''' SET UP MATH EQUATION MODULE '''
 
 
 ''' SET UP GEMINI MODULE '''
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), "../scripts/.env"))
 GEMINI_API = os.environ.get("GEMINI_API_KEY")
 genai.configure(api_key=GEMINI_API)
-model = genai.GenerativeModel("gemini-1.5-pro")
-
-
-''' SET UP WHISPER MODULE '''
-model_wisper = whisper.load_model("base")
+model = genai.GenerativeModel("gemini-2.0-pro-exp-02-05") # gemini-1.5-pro # 
 
 
 ''' SET UP WEBCAM'''
@@ -92,102 +74,205 @@ def recognizeGestures(image, fingers_statuses, count):
 
 ''' INITIALIZE VARIABLES '''
 pointing_detected_frames = 0    # -> Counts consecutive frames of pointing detection
-pointing_stable_threshold = 15  # -> Number of frames to consider as stable
+pointing_stable_threshold = 30  # -> Number of frames to consider as stable
 cooldown_counter = 0            # -> Counter for cooldown
 cooldown_frames = 30            # -> Cooldown period in frames
 is_processing = False           # -> Flag to indicate if processing is ongoing
 speack_back = False              # -> to make Alfred speack back
+videos = []                     # -> List of videos to play
+global ply_index
+ply_index = 0                   # -> Index of the video to play
+youtube_OR_media = "youtube"    # -> last point was for random immage (youtube) or for math equation (media)?
 
+
+''' SET UP ROS NODE '''
+global initial_yaw
+global accumulated_rotation
+global last_video_change_position
+
+# Initialize variables
+initial_yaw = None
+accumulated_rotation = 0
+last_video_change_position = 0
+ply_index = 0
+
+def normalize_angle(angle):
+    """Normalize angle to be between -pi and pi"""
+    while angle > math.pi:
+        angle -= 2 * math.pi
+    while angle < -math.pi:
+        angle += 2 * math.pi
+    return angle
+
+def pose_callback(msg):
+    global initial_yaw
+    global accumulated_rotation
+    global last_video_change_position
+    global ply_index
+    ''' if lift marker, pause video '''
+    hight = msg.pose.position.z
+    if (hight > 0.9 or hight < -0.9) and youtube_OR_media == "youtube":
+        # Try to focus or open Chrome
+        subprocess.run(['xdotool', 'search', '--onlyvisible', '--class', 'chrome', 'windowactivate'], 
+                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        pyautogui.press('space')
+        subprocess.run(['xdotool', 'search', '--onlyvisible', '--class', 'firefox', 'windowactivate'], 
+                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        time.sleep(2)
+
+
+    ''' detect ros messages '''
+    _, _, current_yaw = euler_from_quaternion([    msg.pose.orientation.x,     msg.pose.orientation.y,     msg.pose.orientation.z,     msg.pose.orientation.w])
+    # Initialize reference yaw if this is the first callback
+    if initial_yaw is None:
+        initial_yaw = current_yaw
+        return
+    
+    # Calculate angular difference considering wraparound
+    yaw_diff = normalize_angle(current_yaw - initial_yaw)
+    
+    # Update accumulated rotation (in degrees)
+    accumulated_rotation = yaw_diff * (180.0 / math.pi)
+    
+    # Check if we've rotated enough to change videos (every 90 degrees)
+    rotation_threshold = 100  # degrees
+    current_position = int(accumulated_rotation / rotation_threshold)
+    
+    if current_position != last_video_change_position and len(videos) >= 2 and youtube_OR_media == "youtube":
+        # Determine direction of change
+        direction = 1 if current_position > last_video_change_position else -1
+        
+        # Update video index
+        ply_index = circular_list(ply_index, direction=direction, length=len(videos))
+        
+        # Play the new video
+        print(f"\n\nChanging video based on rotation")
+        print(f"Accumulated rotation: {accumulated_rotation:.2f} degrees")
+        print(f"Playing {'next' if direction > 0 else 'previous'} YouTube video: {videos[ply_index]}")
+        open_url(videos[ply_index], youtube_OR_media)
+        
+        # Update last position
+        last_video_change_position = current_position
+
+rospy.init_node('computer_vision')
+rospy.Subscriber("/natnet_ros/umh_5/pose", PoseStamped, callback=pose_callback, queue_size=1)
 
 ''' MAIN LOOP '''
 while cap.isOpened():
-    ret, frame = cap.read()
-    frame = cv2.flip(frame, -1)
-    if not ret:
-        break
+    try:
+        ret, frame = cap.read()
+        frame = cv2.flip(frame, -1)
+        if not ret:
+            break
 
-    ''' if not processing and cooldown is complete, proceed with detection '''
-    if not is_processing and cooldown_counter == 0:
-        output_image, results = detectHandsLandmarks(frame, hands, draw=True)
-        cv2.imshow('Webcam with Hand Landmarks', output_image)
+        ''' if not processing and cooldown is complete, proceed with detection '''
+        if not is_processing and cooldown_counter == 0:
+            output_image, results = detectHandsLandmarks(frame, hands, draw=True)
+            cv2.imshow('Webcam with Hand Landmarks', output_image)
 
-        ''' count fingers and detect gestures '''
-        if results.multi_hand_landmarks:
-            output_image, fingers_statuses, count = countFingers(frame, results)
-            output_image, hands_gestures = recognizeGestures(output_image, fingers_statuses, count)
-            #print(count)
-            #print(fingers_statuses)
-            #print(hands_gestures)
+            ''' count fingers and detect gestures '''
+            if results.multi_hand_landmarks:
+                output_image, fingers_statuses, count = countFingers(frame, results)
+                output_image, hands_gestures = recognizeGestures(output_image, fingers_statuses, count)
 
-            ''' check for pointing gesture reached stable threshold '''
-            if "POINTING" in hands_gestures.values():
-                pointing_detected_frames += 1
-                print(f"Pointing gesture detected for {pointing_detected_frames} frames.")
-            else:
-                pointing_detected_frames = 0
+                ''' check for pointing gesture reached stable threshold '''
+                if "POINTING" in hands_gestures.values():
+                    pointing_detected_frames += 1
+                    if pointing_detected_frames%5 == 0:
+                        print(f"Pointing gesture detected for {pointing_detected_frames} frames.")
+                else:
+                    pointing_detected_frames = 0
 
-            ''' if pointing gesture is stable, proceed with processing '''
-            if pointing_detected_frames >= pointing_stable_threshold:
-                is_processing = True
+                ''' if pointing gesture is stable, proceed with processing '''
+                if pointing_detected_frames >= pointing_stable_threshold:
+                    is_processing = True
 
-                ''' save image for processing '''
-                screenshot_path = "pointing_object.jpg"
-                cv2.imwrite(screenshot_path, frame)
+                    ''' save image for processing '''
+                    screenshot_path = "pointing_object.jpg"
+                    cv2.imwrite(screenshot_path, frame)
 
-                ''' Generate links and description using GEMINI '''
-                image = cv2.imread(screenshot_path)
-                image = PIL_Image.fromarray(image)
-                cv2.waitKey(2000)
+                    ''' Generate links and description using GEMINI '''
+                    image = cv2.imread(screenshot_path)
+                    image = PIL_Image.fromarray(image)
+                    cv2.waitKey(2000)
 
-                ''' generate links and description using GEMINI '''
-                prompt = """
+                    ''' generate links and description using GEMINI '''
+                    prompt = """
                     I need a very careful structured response from you:
-                        - Describe what I am pointing at with my index finger in exactly two words.
-                        - Then, give me a brief description of the object in one sentence.
-                        - Then give me exactly one Wikipedia link to dive deeper into the topic.
-                """
-                contents = [image, prompt]
-                print("\n-------thinking--------")
-                response = model.generate_content(contents)
-                response_text = response.text
-                print("\n-------Response--------")
-                print(response_text)
+                        give me in your prompt first, just 2 words to describe what I am pointing at with my index finger.
+                        Then give me a wikipedia link to dive deeper into the topic.
+                        DON'T PROVIDE WITH NOTHING ELSE, NO DESCRIPTIONS, NO CONTEXT, NO ADDITIONAL INFORMATION, NO PARENTESIS OR STRANGE INDEXTING OF THE TEXT.
+                        Planar text, 2 raws, 2 words and one link to wikipedia.
+                        --------------------------------------------------
+                        Otherwise, if you detect math equations: In that case the precise structure is the following:
+                            - in the first line write 'MATH EQUATION DETECTED'
+                            - a wikipedia link to explanation of the princiuple in the math equation. Just give the link, no parentesis, no description, etc...
+                            - in the following lines, write at at most 3 steps and the solution. Each step in different line.
+                        --------------------------------------------------
+                        Otherwise, if you detect code (python, C++, Java, etc...): In that case the precise structure is very similar to math one:
+                            - in the first line write 'MATH EQUATION DETECTED' 
+                            - a wikipedia link to explanation of the codeing principle. Just give the link, no parentesis, no description, etc...
+                            - in the following lines, write at at most 3 lines of code (for example fix line with errors) and result of the code if possible. Each step in different line.
+                    """
+                    
+                    contents = [image, prompt]
+                    print("\n-------thinking--------")
+                    response = model.generate_content(contents)
+                    response_text = response.text
+                    print("\n-------Response--------")
+                    print(response_text)
 
-                ''' open wikipedia url in GEMINI response '''
-                start_index = response_text.index('[')
-                end_index = response_text.index(']')
-                url = response_text[start_index+1:end_index]
-                # open usrl on firefox
-                webbrowser.get('firefox').open_new_tab(url)
-                #webbrowser.open_new_tab(url)
-                ''' open youtube url using GEMINI 2 words description '''
-                start_index = response_text.index('\n')
-                print(f"\n{response_text[:start_index]}")
-                search_response = search_yt(response_text[:start_index])
-                for i, search_result in enumerate(search_response.search_results):
-                    print(f"video id {i}: {search_result.video_id}")
-                    if i == 0:
-                        yt.play_video(search_result.video_id)
-                        print(f"Playing YouTube video: {search_result.video_id}")
-                        break
-                ''' make Alfred talk back '''
-                #if speack_back:
-                #    alfread_speacks()
+                    ''' Not Math Equation Detected '''
+                    if "MATH EQUATION DETECTED" not in response_text:
+                        youtube_OR_media = "youtube"
+                        ''' open youtube url using GEMINI 2 words description '''
+                        match_words = re.search(r"^(.*)", response_text)
+                        words = match_words.group(0) if match_words else None
+                        print(f"\n{words}")
+                        videos = []
+                        search_response = search_yt(words)
+                        for i, search_result in enumerate(search_response.search_results):
+                            if i == 0:
+                                print(f"Playing YouTube video: {search_result.video_id}\nURL: {search_result.url}")
+                                open_url(search_result.url, youtube_OR_media)
+                            videos.append(search_result.url)
+                        ''' open wikipedia url in GEMINI response '''
+                        match_url = re.search(r"(https?://[^\s\]]+)", response_text)
+                        url = match_url.group(0) if match_url else None
+                        print(f"\n{url}")
+                        webbrowser.get('firefox').open_new_tab(url)
+                    else:
+                        youtube_OR_media = "media"
+                        ''' extract math equation steps and solution '''
+                        match_url = re.search(r"(https?://[^\s\]]+)", response_text)
+                        url = match_url.group(0) if match_url else None
+                        webbrowser.get('firefox').open_new_tab(url)
+                        print(f"\nURL_wikipedia: {url}")
+                        steps = response_text.split("\n")[2:]
+                        result = steps[-1]
+                        print(steps)
+                        ''' format math equation '''
+                        url = format_math(steps)
+                        open_url(url, youtube_OR_media)
 
-                ''' reset stability counter and cooldown counter '''
-                pointing_detected_frames = 0
-                cooldown_counter = cooldown_frames
-                is_processing = False
-                cv2.waitKey(2000)
+                    ''' reset stability counter and cooldown counter '''
+                    pointing_detected_frames = 0
+                    cooldown_counter = cooldown_frames
+                    is_processing = False
+                    cv2.waitKey(2000)
 
-    ''' if no hands detected, reset stability counter '''
-    if cooldown_counter > 0:
-        cooldown_counter -= 1
+        ''' if no hands detected, reset stability counter '''
+        if cooldown_counter > 0:
+            cooldown_counter -= 1
 
-    ''' break the loop if 'q' is pressed '''
-    if cv2.waitKey(1) & 0xFF == ord('q'):
+        ''' break the loop if 'q' is pressed '''
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+    
+    except KeyboardInterrupt:
         break
 
 ''' release resources '''
 cap.release()
 cv2.destroyAllWindows()
+print("\nfree resources")

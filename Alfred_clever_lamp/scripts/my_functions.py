@@ -1,28 +1,25 @@
+#!/usr/bin/env python3
+
 import cv2
 import mediapipe as mp
-import torch
 import cv2
-import numpy as np
 import os
 import googleapiclient.discovery
-from IPython.display import YouTubeVideo, display
-import webbrowser
 from dotenv import load_dotenv
 import google.generativeai as genai
-import gtts
-from playsound import playsound
-import whisper
-import sounddevice as sd
+import subprocess
+import time
+import pyautogui
+import pyperclip
+import tempfile
 
+pyautogui.FAILSAFE = False
 load_dotenv()
 YOUTUBE_API = os.environ.get("YOUTUBE_DATA_APY_KEY")
 youtube = googleapiclient.discovery.build("youtube", "v3", developerKey=YOUTUBE_API)
 GEMINI_API = os.environ.get("GEMINI_API_KEY")
 genai.configure(api_key=GEMINI_API)
 model = genai.GenerativeModel("gemini-1.5-pro")
-
-# Load the Whisper model
-model_wisper = whisper.load_model("base")
 
 
 mp_hands = mp.solutions.hands
@@ -39,37 +36,6 @@ hands_videos = mp_hands.Hands(
 )
 
 mp_drawing = mp.solutions.drawing_utils
-
-def alfread_speacks():
-    print("Recording...")
-    # wisper
-    duration=5
-    samplerate=16000
-    audio = sd.rec(int(duration * samplerate), samplerate=samplerate, channels=1, dtype=np.float32)
-    sd.wait()  # Wait until recording is finished
-    audio = audio.flatten().astype(np.float32)
-    # Transcribe the audio
-    result = model_wisper.transcribe(audio, fp16=False)
-    if 'alfred' in result['text'].lower():
-        print("Alfred detected, exiting...")
-        print(f"The text from the microphone: \n{result['text']}")
-        print("Generating response...")
-
-        prompt = "Answare to the following question in one sentence. Call me sir, and be focued on the key points that I can use to improve my knowlege as an engeneer." + result['text']
-
-        # response
-        response = model.generate_content(prompt)
-        response = response.text
-        # make request to google to get synthesis
-        tts = gtts.gTTS(response)
-        # save the audio file
-        tts.save("response.mp3")
-        # play the audio file
-        playsound("response.mp3")
-    else:
-        pass
-    print("Done")
-    return
 
 def detectHandsLandmarks(image, hands, draw=True):
     '''
@@ -195,7 +161,6 @@ def countFingers(image, results):
     return output_image, fingers_statuses, count
 
 
-
 ''' functions for YouTube search '''
 class Search_Response:
     def __init__(self, search_response) -> None:
@@ -226,17 +191,126 @@ def search_yt(query, max_results=5, page_token=None):
     response = request.execute()
     return Search_Response(response)
 
-# Display YouTube search results and open the first result in Chrome
-def display_yt_results(search_response):
-    for i, search_result in enumerate(search_response.search_results):
-        #print(f'Video ID: {search_result.video_id}')
-        #print(f'Title: {search_result.title}')
-        #print(f'URL: {search_result.url}')
-        youtube_video = YouTubeVideo(search_result.video_id)
-        #display(youtube_video)
-        #print()
+def circular_list(current_index, direction, length):
+    if direction == 1:
+        if current_index == length-1:
+            return 0
+        else:
+            return current_index + 1
+    else:
+        if current_index == 0:
+            return length-1
+        else:
+            return current_index - 1
 
-        # Open the first video in Chrome
-        if i == 0:
-            chrome_path = '/usr/bin/google-chrome-stable %s'  # Adjust if Chrome is installed in a different path
-            webbrowser.get(chrome_path).open(search_result.url)
+
+def open_url(url, youtube_OR_media):
+    # Try to focus or open Chrome
+    subprocess.run(['xdotool', 'search', '--onlyvisible', '--class', 'chrome', 'windowactivate'], 
+                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    time.sleep(1)
+    # Additional cleanup for video content
+    #pyautogui.hotkey('space')  # pause video
+    #time.sleep(0.3)
+    #pyautogui.press('esc')  # make screen small
+    #time.sleep(0.3)
+    # Navigate to URL
+    pyautogui.hotkey('ctrl', 'l')
+    time.sleep(0.3)
+    pyperclip.copy(url)
+    pyautogui.hotkey('ctrl', 'v')
+    pyautogui.press('return')
+    time.sleep(1)
+
+    if youtube_OR_media == "media":
+        # Define the mouse click sequence from your JSON
+        mouse_actions = [
+            #{"type": "click", "x": 1898, "y": 89, "delay": 0.1},
+            #{"type": "click", "x": 1645, "y": 693, "delay": 0.2},
+            #{"type": "click", "x": 1458, "y": 724, "delay": 0.2},
+            #{"type": "click", "x": 1794, "y": 225, "delay": 0.6},
+            #{"type": "click", "x": 1617, "y": 193, "delay": 0.9}
+            {  "type": "click",  "x": 1900,  "y": 88,  "delay": 0.2},
+            {  "type": "click",  "x": 1684,  "y": 736,  "delay": 0.2},
+            {  "type": "click",  "x": 1433,  "y": 779,  "delay": 0.2},
+            {  "type": "click",  "x": 1685,  "y": 230,  "delay": 0.5},
+            {  "type": "click",  "x": 1562,  "y": 188,  "delay": 1.0}
+        ]
+        
+        # Execute the recorded mouse clicks
+        print("Executing mouse clicks to stop and restart casting...")
+        for i, action in enumerate(mouse_actions):
+            # Wait the recorded delay (skip for first action)
+            if i > 0 and "delay" in action:
+                time.sleep(action["delay"])
+            
+            # Perform the click
+            if action["type"] == "click":
+                pyautogui.click(action["x"], action["y"])
+                print(f"Clicked at position ({action['x']}, {action['y']})")
+    
+    # Step 2: Focus Firefox
+    subprocess.run(['xdotool', 'search', '--onlyvisible', '--class', 'firefox', 'windowactivate'], 
+                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    time.sleep(1)
+    # Step 3: Fullscreen Firefox
+    pyautogui.press('f11')
+
+    return True
+
+
+def format_math(steps):
+    html_content = """
+    <html>
+    <head>
+        <title>Math Solution</title>
+        <style>
+            body {
+                font-family: 'Segoe UI', sans-serif;
+                background-color: #f9f9f9;
+                color: #333;
+                padding: 40px;
+            }
+            h1 {
+                text-align: center;
+                color: #2c3e50;
+                font-size: 3em;
+            }
+            .step {
+                font-size: 3.6em; /* tripled from 1.2em */
+                margin: 30px auto;
+                width: fit-content;
+                background: white;
+                padding: 20px 30px;
+                border-radius: 16px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                text-align: center;
+            }
+            .solution {
+                color: #e74c3c;
+                font-weight: bold;
+                font-size: 4.2em; /* tripled from 1.4em */
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Math Solution Steps</h1>
+    """
+
+    for step in steps:
+        if 'solution' in step.lower():
+            html_content += f'<div class="step solution">{step}</div>'
+        else:
+            html_content += f'<div class="step">{step}</div>'
+
+    html_content += """
+    </body>
+    </html>
+    """
+
+    # Save HTML to a temporary file
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".html", mode='w', encoding='utf-8') as f:
+        f.write(html_content)
+        local_path = f.name
+
+    return 'file://' + local_path
