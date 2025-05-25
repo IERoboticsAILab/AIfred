@@ -92,13 +92,41 @@ To run the code you will need some prerequisites:
 
 5. Cast the tab of chrome with chromcast that is on the robot arm end effector Kodak Projector
 
+7. Create virtual environment and download all the dependencies for computer vision
+<details>
+  <summary><strong>Dependencies</strong></summary>
+
+    ```python
+    ''' IMPORT MODULES '''
+    import sys
+    import os
+    import cv2
+    import re
+    from PIL import Image as PIL_Image
+    import google.generativeai as genai
+    import mediapipe as mp
+    from dotenv import load_dotenv
+    sys.path.append(os.path.join(os.path.dirname(__file__), '../scripts'))
+    from my_functions import countFingers, detectHandsLandmarks, search_yt, circular_list, open_url, format_math
+    import webbrowser
+    import googleapiclient.discovery
+    import rospy
+    from tf.transformations import euler_from_quaternion
+    import geometry_msgs.msg
+    from geometry_msgs.msg import PoseStamped
+    import math
+    import subprocess
+    import pyautogui
+    import time
+    ```
+</details>
+
 7. Run the computer vision ROS Node:
     ```
-    source clever_lamp/Computer_vision/env/bin/activate
     rosrun alfred_clever_lamp computer_vision.py
     ```
 
-    c. `computer_vision.py`: Look at the webcam, detect using mediapipe if you are pointing at something with your finger, take screenshot and shows YouTube video and Wikipedia of what you are looking at. If it detect some math, it solve it step by tep with you, projecting on the paper the solution. To run this script you will need to create a virtual environment with all the dependencies and activate it when launching the alfred node (point at things → webcam → gemini → video casted).
+    a. `computer_vision.py`: Look at the webcam, detect using mediapipe if you are pointing at something with your finger, take screenshot and shows YouTube video and Wikipedia of what you are looking at. If it detect some math, it solve it step by tep with you, projecting on the paper the solution. To run this script you will need to create a virtual environment with all the dependencies and activate it when launching the alfred node (point at things → webcam → gemini → video casted).
 
 
 ### Usage
