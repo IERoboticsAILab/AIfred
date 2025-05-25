@@ -1,7 +1,21 @@
-# AIfrend clever lamp
-Creating the best friend for user desck. We will use wx250s robotic arm from trossen robotics, with kodak projector min attached to the end-effector to create a smart lamp to help the user with his work.
+<h1 align="center">🤖 AIfred – Your Clever Robotic Study Companion</h1>
 
-(YouTube video soon)
+<p align="center">
+  <img src="https://github.com/IERoboticsAILab/clever_lamp/blob/main/Videos_and_pictures/diagram.png" alt="AIfred System Diagram" width="600"/>
+</p>
+
+<p align="center">
+  AIfred is an interactive robotic lamp designed to enhance your learning experience. It responds to hand gestures, retrieves real-time information, and seamlessly blends digital and physical spaces using computer vision and AI. Built with ROS, Mediapipe, and Gemini API, it turns study time into an intuitive and focused conversation.
+</p>
+
+<p align="center">
+  📺 <b>Watch the full demo on YouTube:</b><br>
+  <a href="https://www.youtube.com/watch?v=YOUR_VIDEO_ID">
+    <img src="https://img.youtube.com/vi/YOUR_VIDEO_ID/0.jpg" alt="AIfred YouTube Video" width="400"/><br>
+    https://www.youtube.com/watch?v=YOUR_VIDEO_ID
+  </a>
+</p>
+
 
 ## Intro
 
