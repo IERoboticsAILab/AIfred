@@ -19,7 +19,7 @@ YOUTUBE_API = os.environ.get("YOUTUBE_DATA_APY_KEY")
 youtube = googleapiclient.discovery.build("youtube", "v3", developerKey=YOUTUBE_API)
 GEMINI_API = os.environ.get("GEMINI_API_KEY")
 genai.configure(api_key=GEMINI_API)
-model = genai.GenerativeModel("gemini-1.5-pro")
+model = genai.GenerativeModel("gemini-2.5-pro-preview-03-25")
 
 
 mp_hands = mp.solutions.hands
@@ -230,11 +230,16 @@ def open_url(url, youtube_OR_media):
             #{"type": "click", "x": 1458, "y": 724, "delay": 0.2},
             #{"type": "click", "x": 1794, "y": 225, "delay": 0.6},
             #{"type": "click", "x": 1617, "y": 193, "delay": 0.9}
-            {  "type": "click",  "x": 1900,  "y": 88,  "delay": 0.2},
-            {  "type": "click",  "x": 1684,  "y": 736,  "delay": 0.2},
-            {  "type": "click",  "x": 1433,  "y": 779,  "delay": 0.2},
-            {  "type": "click",  "x": 1685,  "y": 230,  "delay": 0.5},
-            {  "type": "click",  "x": 1562,  "y": 188,  "delay": 1.0}
+            #{  "type": "click",  "x": 1900,  "y": 88,  "delay": 0.2},
+            #{  "type": "click",  "x": 1684,  "y": 736,  "delay": 0.2},
+            #{  "type": "click",  "x": 1433,  "y": 779,  "delay": 0.2},
+            #{  "type": "click",  "x": 1685,  "y": 230,  "delay": 0.5},
+            #{  "type": "click",  "x": 1562,  "y": 188,  "delay": 1.0}
+            {  "type": "click",  "x": 1896,  "y": 86,  "delay": 0.2},
+            {  "type": "click",  "x": 1679,  "y": 739,  "delay": 0.2},
+            {  "type": "click",  "x": 1413,  "y": 777,  "delay": 0.2},
+            {  "type": "click",  "x": 1622,  "y": 232,  "delay": 0.5},
+            {  "type": "click",  "x": 1478,  "y": 195,  "delay": 1.0}
         ]
         
         # Execute the recorded mouse clicks

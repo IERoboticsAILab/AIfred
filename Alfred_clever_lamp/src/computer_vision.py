@@ -39,7 +39,7 @@ mp_drawing = mp.solutions.drawing_utils
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), "../scripts/.env"))
 GEMINI_API = os.environ.get("GEMINI_API_KEY")
 genai.configure(api_key=GEMINI_API)
-model = genai.GenerativeModel("gemini-2.0-pro-exp-02-05") # gemini-1.5-pro # 
+model = genai.GenerativeModel("gemini-2.5-pro-preview-03-25") #("gemini-2.0-pro-exp-02-05") # gemini-1.5-pro # 
 
 
 ''' SET UP WEBCAM'''
@@ -88,13 +88,9 @@ youtube_OR_media = "youtube"    # -> last point was for random immage (youtube) 
 ''' SET UP ROS NODE '''
 global initial_yaw
 global accumulated_rotation
-global last_video_change_position
-
 # Initialize variables
 initial_yaw = None
 accumulated_rotation = 0
-last_video_change_position = 0
-ply_index = 0
 
 def normalize_angle(angle):
     """Normalize angle to be between -pi and pi"""
@@ -107,8 +103,8 @@ def normalize_angle(angle):
 def pose_callback(msg):
     global initial_yaw
     global accumulated_rotation
-    global last_video_change_position
     global ply_index
+    
     ''' if lift marker, pause video '''
     hight = msg.pose.position.z
     if (hight > 0.9 or hight < -0.9) and youtube_OR_media == "youtube":
@@ -120,42 +116,53 @@ def pose_callback(msg):
                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         time.sleep(2)
 
-
     ''' detect ros messages '''
-    _, _, current_yaw = euler_from_quaternion([    msg.pose.orientation.x,     msg.pose.orientation.y,     msg.pose.orientation.z,     msg.pose.orientation.w])
+    _, _, current_yaw = euler_from_quaternion([
+        msg.pose.orientation.x, 
+        msg.pose.orientation.y, 
+        msg.pose.orientation.z, 
+        msg.pose.orientation.w
+    ])
+    
     # Initialize reference yaw if this is the first callback
     if initial_yaw is None:
         initial_yaw = current_yaw
+        print("Initial yaw set to %.2f degrees" % (current_yaw * 180.0 / math.pi))
         return
     
-    # Calculate angular difference considering wraparound
-    yaw_diff = normalize_angle(current_yaw - initial_yaw)
+    # Calculate angular difference
+    yaw_diff = current_yaw - initial_yaw
     
-    # Update accumulated rotation (in degrees)
-    accumulated_rotation = yaw_diff * (180.0 / math.pi)
+    # Increment or decrement accumulated rotation based on direction
+    if yaw_diff > 0:
+        accumulated_rotation += 1
+    elif yaw_diff < 0:
+        accumulated_rotation -= 1
     
-    # Check if we've rotated enough to change videos (every 90 degrees)
-    rotation_threshold = 100  # degrees
-    current_position = int(accumulated_rotation / rotation_threshold)
+    # Check thresholds for video changes
+    rotation_threshold = 180  # Adjust based on desired sensitivity
     
-    if current_position != last_video_change_position and len(videos) >= 2 and youtube_OR_media == "youtube":
-        # Determine direction of change
-        direction = 1 if current_position > last_video_change_position else -1
-        
-        # Update video index
-        ply_index = circular_list(ply_index, direction=direction, length=len(videos))
-        
-        # Play the new video
-        print(f"\n\nChanging video based on rotation")
-        print(f"Accumulated rotation: {accumulated_rotation:.2f} degrees")
-        print(f"Playing {'next' if direction > 0 else 'previous'} YouTube video: {videos[ply_index]}")
+    if accumulated_rotation > rotation_threshold and len(videos) >= 2 and youtube_OR_media == "youtube":
+        # Play previous video
+        print("\n\nPREVIOUS VIDEO")
+        ply_index = circular_list(ply_index, direction=-1, length=len(videos))
+        print(f"Playing previous YouTube video: {videos[ply_index]}")
         open_url(videos[ply_index], youtube_OR_media)
+        accumulated_rotation = 0  # Reset after triggering
         
-        # Update last position
-        last_video_change_position = current_position
+    elif accumulated_rotation < -rotation_threshold and len(videos) >= 2 and youtube_OR_media == "youtube":
+        # Play next video
+        print("\n\nNEXT VIDEO")
+        ply_index = circular_list(ply_index, direction=1, length=len(videos))
+        print(f"Playing next YouTube video: {videos[ply_index]}")
+        open_url(videos[ply_index], youtube_OR_media)
+        accumulated_rotation = 0  # Reset after triggering
+    
+    # Update initial yaw for the next comparison
+    initial_yaw = current_yaw
 
 rospy.init_node('computer_vision')
-rospy.Subscriber("/natnet_ros/umh_5/pose", PoseStamped, callback=pose_callback, queue_size=1)
+rospy.Subscriber("/natnet_ros/umh_0/pose", PoseStamped, callback=pose_callback, queue_size=1)
 
 ''' MAIN LOOP '''
 while cap.isOpened():
@@ -223,7 +230,7 @@ while cap.isOpened():
                     print(response_text)
 
                     ''' Not Math Equation Detected '''
-                    if "MATH EQUATION DETECTED" not in response_text:
+                    if "MATH EQUATION DETECTED" not in response_text and "CODE DETECTED" not in response_text:
                         youtube_OR_media = "youtube"
                         ''' open youtube url using GEMINI 2 words description '''
                         match_words = re.search(r"^(.*)", response_text)
