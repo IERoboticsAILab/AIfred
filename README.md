@@ -33,55 +33,40 @@ To run the code you will need some prerequisites:
 
 1. Optitrack system: It is a system of camares that detect position and orientation of cetain objects thank to capability of reflection of the ball markers.
 2. Install [natnet_ros_cpp](https://github.com/L2S-lab/natnet_ros_cpp) ros package to send messages from Optitrack to your `roscore`.
-3. For a easyer user interaction we 3D printed our [universal marker](https://github.com/IERoboticsAILab/3d_printing_designs/blob/main/files/optitrack/Universal_Marker_3.stl). It is an object that will be easily detected from Optitrack. We call it `umh_0`.
-4. For a easyer user interaction we 3D printed our [custom wx250s base](https://github.com/IERoboticsAILab/3d_printing_designs/blob/main/files/WX-250_robot_garden/base/bottom_base_WX-250_for%20Optitrack.stl), for the robot arm. It has M3 scrues to host marker balls in place and detect position of robot base. We call it `real_base_wx250s`.
-
-#### Resources
-
-- Buy [Kodak Projector mini 75](https://www.amazon.es/Proyector-ultraport%C3%A1til-pulgadas-recargable-integrado/dp/B078NCG82N/ref=sr_1_1_sspa?__mk_es_ES=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=3S9FWZSE5RNKX&dib=eyJ2IjoiMSJ9.O8ucHWBeDVklyy4E2G41tBv8Ia-koCQlhFK2-Gaa-sfu27Qibdr6sjtje2vBBshUx0CzYE6RjgCFtxasghLWDDIU2orVaDq9UBfuy8Fgbt6y-cD9T7YY4B4xmdCXQINHssZoAu0IbHls-0fcyCdUTBtkNML2p2IcDDLb16Sl-fBh9IGZmtBXrpvIQOudGI3tpmXbGAN9PZPQL42tDny_-oY1NeIJ1Qwu9Nog4Lcj6VHFwG8UjK0ffjWMBQBGJ1QhjWz8JBp1HbcoFbzwWYb2BXxU-_6vTjoVKsnuKYXFLrc.HbABcLTElT1qpDQNPyOYGagCEX3jk-Wce0fHaSc58V8&dib_tag=se&keywords=kodak+projector&qid=1716604099&sprefix=kodak+projector%2Caps%2C132&sr=8-1-spons&sp_csd=d2lkZ2V0TmFtZT1zcF9hdGY&psc=1)
-- [kodak manual pdf](demos/kodak_manual.pdf)
-- Use [natnet_ros_cpp](https://github.com/L2S-lab/natnet_ros_cpp) ROS package
+2. Install [interbotics_ws](https://docs.trossenrobotics.com/interbotix_xsarms_docs/ros_interface/ros1/software_setup.html) ros package to move and nteract wth wx250s robot arm from trossenrobotics.
+3. 3D print our [universal marker](https://github.com/IERoboticsAILab/3d_printing_designs/blob/main/files/optitrack/Universal_Marker_3.stl). It is an object that will be easily detected from Optitrack. We call it `umh_0`.
+4. 3D print our [custom wx250s base](https://github.com/IERoboticsAILab/3d_printing_designs/blob/main/files/WX-250_robot_garden/base/bottom_base_WX-250_for%20Optitrack.stl), for the robot arm. It has M3 scrues to host marker balls in place and detect position of robot base. We call it `real_base_wx250s`.
 
 <br>
 
 ## AIfred USAGE (Ros Package)
 
-1. Make a Gemini API and YouTube API and put them in a `.env` file
-
-1. Mount Kodak Projector on the end-effector of the Trossen Robotics Robot arm (wx250s) (download [here](https://github.com/IERoboticsAILab/3d_printing_designs/blob/main/files/WX-250_robot_garden/support_projector_wx250s.stl) the attachment)
+#### Hardware set-up
 
 1. Setup:
     <div align="center">
     <img src="https://github.com/IERoboticsAILab/clever_lamp/blob/main/Videos_and_pictures/station_setup.png" alt="station setup" width="750">
     </div>
-
-1. Turn on optitrack:
+2. Take Trossenrobotics wx250s, and secure it on table. Connect it to his power supply and connect signal USB to the computer.
+3. Mount Kodak Projector on the end-effector of the Trossenrobotics Robot arm (wx250s) (download [this](https://github.com/IERoboticsAILab/3d_printing_designs/blob/main/files/WX-250_robot_garden/support_projector_wx250s.stl) for the attachment).
+4. Attach chromcast to the HDMI of the kodak projector mini and power with a USB from chromcast to projector.
+5. Connect a USB camera to PC and make it point on your working station.
+6. Turn on optitrack:
 
     **a.** Turn on rigid body for mark base robot (download [here](https://github.com/IERoboticsAILab/3d_printing_designs/blob/main/files/WX-250_robot_garden/base/bottom_base_WX-250_for%20Optitrack.stl) `real_base_wx250s`)
 
     **b.** Turn on rigid body for universal marker (download [here](https://github.com/IERoboticsAILab/3d_printing_designs/blob/main/files/optitrack/Universal_Marker_3.stl)`umh_0`)
 
-1. Download [natnet_ros_cpp](https://github.com/L2S-lab/natnet_ros_cpp) ROS package
 
-1. Publishing messages from Optitrack to ros:
+#### Install software
 
-    ```
-    roslaunch natnet_ros_cpp gui_natnet_ros.launch
-    ```
+1. Create a Gemini API and YouTube API and put them in a `.env` file
 
-    <div align="center">
-    <img src="https://github.com/IERoboticsAILab/clever_lamp/blob/main/Videos_and_pictures/natnet_setup.png" alt="natnet setup" width="550">
-    </div>
+2. Download [natnet_ros_cpp](https://github.com/L2S-lab/natnet_ros_cpp) ROS package
 
-2. Downlaod [Trossenrobotics ROS Pakages](https://docs.trossenrobotics.com/interbotix_xsarms_docs/ros_interface/ros1/software_setup.html) (our guide [here](https://github.com/IERoboticsAILab/wx250s_documentation))
+3. Downlaod [Trossenrobotics ROS Pakages](https://docs.trossenrobotics.com/interbotix_xsarms_docs/ros_interface/ros1/software_setup.html) (our guide [here](https://github.com/IERoboticsAILab/wx250s_documentation))
 
-2. Connect to Trossenrobotics Robot Arm. Source the interbotix workspace and run the controll package:
-    ```
-    source interbotics_ws/devel/setup.bash
-    roslaunch interbotix_xsarm_control xsarm_control.launch robot_model:=wx250s
-    ```
-
-2. Download AIfred ROS Package:
+4. Download AIfred ROS Package:
 
     ```
     cd ~/catkin_ws/src
@@ -90,23 +75,13 @@ To run the code you will need some prerequisites:
     catkin build  #OR catkin_make
     . devel/setup.bash
     ```
+5. Open chrome (better account with youtube premium) tab (will be used for casting YouTube videos)
 
-3. Make robot follow and point on the marker. Launch [clever_lamp.launch](https://github.com/IERoboticsAILab/clever_lamp/blob/main/Alfred_clever_lamp/launch/clever_lamp.launch) that will execute both nodes [brodcast_marker.py](https://github.com/IERoboticsAILab/clever_lamp/blob/main/Alfred_clever_lamp/src/brodcast_marker.py) and [clever_lamp.py](https://github.com/IERoboticsAILab/clever_lamp/blob/main/Alfred_clever_lamp/src/clever_lamp.py):
-    ```
-    roslaunch alfred_clever_lamp clever_lamp.launch
-    ```
+6. Open FireFox tab (will be used for wikipedia articles)
 
-    a. `brodcast_marker.py`: This section of the project combine digital space wit real word with a user frendly interface. In RViz the robot is set in (0,0,0) that is the word cordinate space. But in the reality the robot is in a diffrent position in space (it depends where you position the working table). Here we take the Optitrack cordinates of the real robot base (`/natnet_ros/real_base_wx250s/pose`) in relation with the real marker (`/natnet_ros/umh_2/pose`), and we transform that relation with the digital robot base (`wx250s/base_link`), publishing a new tf for the marker (`umh_2_new`)
+7. Cast the tab of chrome with chromcast that is on the robot arm end effector Kodak Projector
 
-    b. `clever_lamp.py`: Look at the tf transformation of the universal marker position relative to the digital space and move end effector accordingly.
-
-4. Open chrome (better account with youtube premium) tab (will be used for casting YouTube videos)
-
-5. Open FireFox tab (will be used for wikipedia articles)
-
-5. Cast the tab of chrome with chromcast that is on the robot arm end effector Kodak Projector
-
-7. Create virtual environment and download all the dependencies for computer vision
+8. Create virtual environment and download all the dependencies for computer vision
 <details>
   <summary><strong>Dependencies</strong></summary>
 
@@ -135,7 +110,42 @@ To run the code you will need some prerequisites:
     ```
 </details>
 
-7. Run the computer vision ROS Node:
+#### Run demo
+
+1. Publishing messages from Optitrack to ros:
+
+    ```
+    roslaunch natnet_ros_cpp gui_natnet_ros.launch
+    ```
+
+    <div align="center">
+    <img src="https://github.com/IERoboticsAILab/clever_lamp/blob/main/Videos_and_pictures/natnet_setup.png" alt="natnet setup" width="550">
+    </div>
+
+    - Check that the topics have been published using:
+
+      ```
+      rostopic list
+      ```
+
+      If NOT, change from *Multicast* to *Unicast* (and viceversa) and press *start* again untill the messages are published
+
+2. Connect to Trossenrobotics Robot Arm. Source the interbotix workspace and run the controll package:
+    ```
+    source interbotics_ws/devel/setup.bash
+    roslaunch interbotix_xsarm_control xsarm_control.launch robot_model:=wx250s
+    ```
+
+3. Make robot follow and point on the marker. Launch [clever_lamp.launch](https://github.com/IERoboticsAILab/clever_lamp/blob/main/Alfred_clever_lamp/launch/clever_lamp.launch) that will execute both nodes [brodcast_marker.py](https://github.com/IERoboticsAILab/clever_lamp/blob/main/Alfred_clever_lamp/src/brodcast_marker.py) and [clever_lamp.py](https://github.com/IERoboticsAILab/clever_lamp/blob/main/Alfred_clever_lamp/src/clever_lamp.py):
+    ```
+    roslaunch alfred_clever_lamp clever_lamp.launch
+    ```
+
+    a. `brodcast_marker.py`: This section of the project combine digital space wit real word with a user frendly interface. In RViz the robot is set in (0,0,0) that is the word cordinate space. But in the reality the robot is in a diffrent position in space (it depends where you position the working table). Here we take the Optitrack cordinates of the real robot base (`/natnet_ros/real_base_wx250s/pose`) in relation with the real marker (`/natnet_ros/umh_2/pose`), and we transform that relation with the digital robot base (`wx250s/base_link`), publishing a new tf for the marker (`umh_2_new`)
+
+    b. `clever_lamp.py`: Look at the tf transformation of the universal marker position relative to the digital space and move end effector accordingly.
+
+4. Run the computer vision ROS Node:
     ```
     rosrun alfred_clever_lamp computer_vision.py
     ```
@@ -152,6 +162,13 @@ To run the code you will need some prerequisites:
 2. Lift the Marker to pause the YouTube video.
 
 3. Rotate the marker to show next/previous YouTube video.
+
+## Resources
+
+- [Kodak Projector mini 75](https://www.amazon.es/Proyector-ultraport%C3%A1til-pulgadas-recargable-integrado/dp/B078NCG82N/ref=sr_1_1_sspa?__mk_es_ES=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=3S9FWZSE5RNKX&dib=eyJ2IjoiMSJ9.O8ucHWBeDVklyy4E2G41tBv8Ia-koCQlhFK2-Gaa-sfu27Qibdr6sjtje2vBBshUx0CzYE6RjgCFtxasghLWDDIU2orVaDq9UBfuy8Fgbt6y-cD9T7YY4B4xmdCXQINHssZoAu0IbHls-0fcyCdUTBtkNML2p2IcDDLb16Sl-fBh9IGZmtBXrpvIQOudGI3tpmXbGAN9PZPQL42tDny_-oY1NeIJ1Qwu9Nog4Lcj6VHFwG8UjK0ffjWMBQBGJ1QhjWz8JBp1HbcoFbzwWYb2BXxU-_6vTjoVKsnuKYXFLrc.HbABcLTElT1qpDQNPyOYGagCEX3jk-Wce0fHaSc58V8&dib_tag=se&keywords=kodak+projector&qid=1716604099&sprefix=kodak+projector%2Caps%2C132&sr=8-1-spons&sp_csd=d2lkZ2V0TmFtZT1zcF9hdGY&psc=1)
+- [kodak manual pdf](demos/kodak_manual.pdf)
+- [natnet_ros_cpp](https://github.com/L2S-lab/natnet_ros_cpp) ROS package
+- [interbotics_ws](https://docs.trossenrobotics.com/interbotix_xsarms_docs/ros_interface/ros1/software_setup.html) ROS package
 
 ## Demo
 
