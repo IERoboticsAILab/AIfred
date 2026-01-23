@@ -14,7 +14,7 @@ def pose_callback(msg):
 
     t.header.stamp = rospy.Time.now()
     t.header.frame_id = "wx250s/base_link"
-    t.child_frame_id = "umh_0_new"
+    t.child_frame_id = "umh_5_new"
     t.transform.translation.x = (msg.pose.position.y-pos_base[1]) 
     t.transform.translation.y = -(msg.pose.position.x-pos_base[0])
     t.transform.translation.z = (msg.pose.position.z-pos_base[2]) 
@@ -31,6 +31,6 @@ def base_callback(msg):
 
 if __name__ == '__main__':
     rospy.init_node('tf2_broadcaster')
-    rospy.Subscriber("/natnet_ros/umh_0/pose", PoseStamped, callback=pose_callback, queue_size=1)
+    rospy.Subscriber("/natnet_ros/umh_5/pose", PoseStamped, callback=pose_callback, queue_size=1)
     rospy.Subscriber("/natnet_ros/real_base_wx250s/pose", PoseStamped, callback=base_callback, queue_size=1)
     rospy.spin()

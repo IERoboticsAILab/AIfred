@@ -46,7 +46,7 @@ if __name__ == '__main__':
 
     while not rospy.is_shutdown():
         try:
-            trans = tfBuffer.lookup_transform("umh_0_new", "wx250s/base_link", rospy.Time())
+            trans = tfBuffer.lookup_transform("umh_5_new", "wx250s/base_link", rospy.Time())
         except (tf2_ros.LookupException, tf2_ros.ConnectivityException, tf2_ros.ExtrapolationException):
             rate.sleep()
             continue

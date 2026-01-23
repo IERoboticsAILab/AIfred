@@ -36,10 +36,65 @@ mp_drawing = mp.solutions.drawing_utils
 
 
 ''' SET UP GEMINI MODULE '''
+#load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), "../scripts/.env"))
+#GEMINI_API = os.environ.get("GEMINI_API_KEY")
+#genai.configure(api_key=GEMINI_API)
+#model = genai.GenerativeModel("gemini-2.5-pro-preview-03-25") #("gemini-2.0-pro-exp-02-05") # gemini-1.5-pro # 
+''' SET UP GEMINI MODULE '''
+import requests
+import base64
+from io import BytesIO
+
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), "../scripts/.env"))
 GEMINI_API = os.environ.get("GEMINI_API_KEY")
-genai.configure(api_key=GEMINI_API)
-model = genai.GenerativeModel("gemini-2.5-pro-preview-03-25") #("gemini-2.0-pro-exp-02-05") # gemini-1.5-pro # 
+
+if not GEMINI_API:
+    raise RuntimeError("GEMINI_API_KEY not found. Put it in a .env file or export it.")
+
+def gemini_generate_with_image(prompt_text: str, image_path: str, model: str = "gemini-2.5-pro-preview-03-25") -> str:
+    # Load image using cv2 and convert to PIL
+    cv2_image = cv2.imread(image_path)
+    if cv2_image is None:
+        raise RuntimeError(f"Could not load image: {image_path}")
+    
+    # Convert BGR (cv2) to RGB (PIL)
+    cv2_image_rgb = cv2.cvtColor(cv2_image, cv2.COLOR_BGR2RGB)
+    pil_image = PIL_Image.fromarray(cv2_image_rgb)
+    
+    # Convert PIL image to base64
+    buffered = BytesIO()
+    pil_image.save(buffered, format="JPEG")
+    img_base64 = base64.b64encode(buffered.getvalue()).decode('utf-8')
+    
+    # Prepare API request
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={GEMINI_API}"
+    payload = {
+        "contents": [
+            {
+                "parts": [
+                    {
+                        "inline_data": {
+                            "mime_type": "image/jpeg",
+                            "data": img_base64
+                        }
+                    },
+                    {
+                        "text": prompt_text
+                    }
+                ]
+            }
+        ]
+    }
+    
+    r = requests.post(url, json=payload, timeout=30)
+    r.raise_for_status()
+    data = r.json()
+    
+    candidates = data.get("candidates", [])
+    if not candidates:
+        raise RuntimeError(f"No candidates in response: {data}")
+    parts = candidates[0].get("content", {}).get("parts", [])
+    return "".join(p.get("text", "") for p in parts).strip()
 
 
 ''' SET UP WEBCAM'''
@@ -162,7 +217,7 @@ def pose_callback(msg):
     initial_yaw = current_yaw
 
 rospy.init_node('computer_vision')
-rospy.Subscriber("/natnet_ros/umh_0/pose", PoseStamped, callback=pose_callback, queue_size=1)
+rospy.Subscriber("/natnet_ros/umh_5/pose", PoseStamped, callback=pose_callback, queue_size=1)
 
 ''' MAIN LOOP '''
 while cap.isOpened():
@@ -195,15 +250,42 @@ while cap.isOpened():
                     is_processing = True
 
                     ''' save image for processing '''
-                    screenshot_path = "pointing_object.jpg"
+                    screenshot_path = "~/catkin_ws/src/AIfred_clever_lamp/Videos_and_pictures/pointing_object.jpg"
                     cv2.imwrite(screenshot_path, frame)
 
-                    ''' Generate links and description using GEMINI '''
-                    image = cv2.imread(screenshot_path)
-                    image = PIL_Image.fromarray(image)
+                    #''' Generate links and description using GEMINI '''
+                    #image = cv2.imread(screenshot_path)
+                    #image = PIL_Image.fromarray(image)
+                    #cv2.waitKey(2000)
+#
+                    #''' generate links and description using GEMINI '''
+                    #prompt = """
+                    #I need a very careful structured response from you:
+                    #    give me in your prompt first, just 2 words to describe what I am pointing at with my index finger.
+                    #    Then give me a wikipedia link to dive deeper into the topic.
+                    #    DON'T PROVIDE WITH NOTHING ELSE, NO DESCRIPTIONS, NO CONTEXT, NO ADDITIONAL INFORMATION, NO PARENTESIS OR STRANGE INDEXTING OF THE TEXT.
+                    #    Planar text, 2 raws, 2 words and one link to wikipedia.
+                    #    --------------------------------------------------
+                    #    Otherwise, if you detect math equations: In that case the precise structure is the following:
+                    #        - in the first line write 'MATH EQUATION DETECTED'
+                    #        - a wikipedia link to explanation of the princiuple in the math equation. Just give the link, no parentesis, no description, etc...
+                    #        - in the following lines, write at at most 3 steps and the solution. Each step in different line.
+                    #    --------------------------------------------------
+                    #    Otherwise, if you detect code (python, C++, Java, etc...): In that case the precise structure is very similar to math one:
+                    #        - in the first line write 'MATH EQUATION DETECTED' 
+                    #        - a wikipedia link to explanation of the codeing principle. Just give the link, no parentesis, no description, etc...
+                    #        - in the following lines, write at at most 3 lines of code (for example fix line with errors) and result of the code if possible. Each step in different line.
+                    #"""
+                    #
+                    #contents = [image, prompt]
+                    #print("\n-------thinking--------")
+                    #response = model.generate_content(contents)
+                    #response_text = response.text
+                    #print("\n-------Response--------")
+                    #print(response_text)
+                    ''' generate links and description using GEMINI '''
                     cv2.waitKey(2000)
 
-                    ''' generate links and description using GEMINI '''
                     prompt = """
                     I need a very careful structured response from you:
                         give me in your prompt first, just 2 words to describe what I am pointing at with my index finger.
@@ -222,10 +304,8 @@ while cap.isOpened():
                             - in the following lines, write at at most 3 lines of code (for example fix line with errors) and result of the code if possible. Each step in different line.
                     """
                     
-                    contents = [image, prompt]
                     print("\n-------thinking--------")
-                    response = model.generate_content(contents)
-                    response_text = response.text
+                    response_text = gemini_generate_with_image(prompt, screenshot_path, model="gemini-2.5-pro-preview-03-25")
                     print("\n-------Response--------")
                     print(response_text)
 

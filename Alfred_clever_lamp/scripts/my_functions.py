@@ -6,21 +6,84 @@ import cv2
 import os
 import googleapiclient.discovery
 from dotenv import load_dotenv
-import google.generativeai as genai
+#import google.generativeai as genai
+from PIL import Image as PIL_Image
 import subprocess
 import time
 import pyautogui
 import pyperclip
 import tempfile
+import requests
+import base64
+from io import BytesIO
 
 pyautogui.FAILSAFE = False
 load_dotenv()
 YOUTUBE_API = os.environ.get("YOUTUBE_DATA_APY_KEY")
-youtube = googleapiclient.discovery.build("youtube", "v3", developerKey=YOUTUBE_API)
-GEMINI_API = os.environ.get("GEMINI_API_KEY")
-genai.configure(api_key=GEMINI_API)
-model = genai.GenerativeModel("gemini-2.5-pro-preview-03-25")
+# Remove GOOGLE_APPLICATION_CREDENTIALS if it exists to prevent default credentials lookup
+if 'GOOGLE_APPLICATION_CREDENTIALS' in os.environ:
+    del os.environ['GOOGLE_APPLICATION_CREDENTIALS']
 
+# Build YouTube API client with static discovery to avoid credentials issues
+from googleapiclient.discovery import build
+
+youtube = build(
+    "youtube", 
+    "v3", 
+    developerKey=YOUTUBE_API, 
+    cache_discovery=False,
+    static_discovery=False
+)
+
+#GEMINI_API = os.environ.get("GEMINI_API_KEY")
+#genai.configure(api_key=GEMINI_API)
+#model = genai.GenerativeModel("gemini-2.5-pro-preview-03-25")
+GEMINI_API = os.environ.get("GEMINI_API_KEY")
+
+def gemini_generate_with_image(prompt_text: str, image_path: str, model: str = "gemini-2.5-pro-preview-03-25") -> str:
+    # Load image using cv2 and convert to PIL
+    cv2_image = cv2.imread(image_path)
+    if cv2_image is None:
+        raise RuntimeError(f"Could not load image: {image_path}")
+    
+    # Convert BGR (cv2) to RGB
+    cv2_image_rgb = cv2.cvtColor(cv2_image, cv2.COLOR_BGR2RGB)
+    pil_image = PIL_Image.fromarray(cv2_image_rgb)
+    
+    # Convert PIL image to base64
+    buffered = BytesIO()
+    pil_image.save(buffered, format="JPEG")
+    img_base64 = base64.b64encode(buffered.getvalue()).decode('utf-8')
+    
+    # Prepare API request
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={GEMINI_API}"
+    payload = {
+        "contents": [
+            {
+                "parts": [
+                    {
+                        "inline_data": {
+                            "mime_type": "image/jpeg",
+                            "data": img_base64
+                        }
+                    },
+                    {
+                        "text": prompt_text
+                    }
+                ]
+            }
+        ]
+    }
+    
+    r = requests.post(url, json=payload, timeout=30)
+    r.raise_for_status()
+    data = r.json()
+    
+    candidates = data.get("candidates", [])
+    if not candidates:
+        raise RuntimeError(f"No candidates in response: {data}")
+    parts = candidates[0].get("content", {}).get("parts", [])
+    return "".join(p.get("text", "") for p in parts).strip()
 
 mp_hands = mp.solutions.hands
 
