@@ -51,7 +51,7 @@ GEMINI_API = os.environ.get("GEMINI_API_KEY")
 if not GEMINI_API:
     raise RuntimeError("GEMINI_API_KEY not found. Put it in a .env file or export it.")
 
-def gemini_generate_with_image(prompt_text: str, image_path: str, model: str = "gemini-2.5-pro-preview-03-25") -> str:
+def gemini_generate_with_image(prompt_text: str, image_path: str, model: str = "gemini-2.0-flash") -> str:
     # Load image using cv2 and convert to PIL
     cv2_image = cv2.imread(image_path)
     if cv2_image is None:
@@ -250,7 +250,7 @@ while cap.isOpened():
                     is_processing = True
 
                     ''' save image for processing '''
-                    screenshot_path = "~/catkin_ws/src/AIfred_clever_lamp/Videos_and_pictures/pointing_object.jpg"
+                    screenshot_path = "/home/gringo/catkin_ws/src/AIfred_clever_lamp/Videos_and_pictures/pointing_object.jpg"
                     cv2.imwrite(screenshot_path, frame)
 
                     #''' Generate links and description using GEMINI '''
@@ -305,7 +305,7 @@ while cap.isOpened():
                     """
                     
                     print("\n-------thinking--------")
-                    response_text = gemini_generate_with_image(prompt, screenshot_path, model="gemini-2.5-pro-preview-03-25")
+                    response_text = gemini_generate_with_image(prompt, screenshot_path, model="gemini-2.0-flash")
                     print("\n-------Response--------")
                     print(response_text)
 

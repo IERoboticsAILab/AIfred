@@ -40,7 +40,7 @@ youtube = build(
 #model = genai.GenerativeModel("gemini-2.5-pro-preview-03-25")
 GEMINI_API = os.environ.get("GEMINI_API_KEY")
 
-def gemini_generate_with_image(prompt_text: str, image_path: str, model: str = "gemini-2.5-pro-preview-03-25") -> str:
+def gemini_generate_with_image(prompt_text: str, image_path: str, model: str = "gemini-2.0-flash") -> str:
     # Load image using cv2 and convert to PIL
     cv2_image = cv2.imread(image_path)
     if cv2_image is None:
