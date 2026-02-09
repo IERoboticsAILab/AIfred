@@ -8,4 +8,7 @@
   <!-- Launch the Python script -->
   <node pkg="alfred_clever_lamp" type="detect_pointing.py" name="pub_pointing_image" output="screen">
   </node>
+  <!-- Launch the Python script -->
+  <node pkg="alfred_clever_lamp" type="process_image.py" name="process_image_gemini" output="screen">
+  </node>
 </launch>

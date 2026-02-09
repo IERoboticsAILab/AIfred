@@ -8,7 +8,7 @@ string prev_mode
 string current_mode
 
 # list of URLs
-string[]
+string[] url_list
 
 # index of url in url_list we need to open
 int32 i
