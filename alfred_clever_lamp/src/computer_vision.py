@@ -182,7 +182,7 @@ def pose_callback(msg):
     # Initialize reference yaw if this is the first callback
     if initial_yaw is None:
         initial_yaw = current_yaw
-        print("Initial yaw set to %.2f degrees" % (current_yaw * 180.0 / math.pi))
+        print("computer_vision.py: Initial yaw set to %.2f degrees" % (current_yaw * 180.0 / math.pi))
         return
     
     # Calculate angular difference
@@ -199,17 +199,17 @@ def pose_callback(msg):
     
     if accumulated_rotation > rotation_threshold and len(videos) >= 2 and youtube_OR_media == "youtube":
         # Play previous video
-        print("\n\nPREVIOUS VIDEO")
+        print("\n\ncomputer_vision.py: PREVIOUS VIDEO")
         ply_index = circular_list(ply_index, direction=-1, length=len(videos))
-        print(f"Playing previous YouTube video: {videos[ply_index]}")
+        print(f"computer_vision.py: Playing previous YouTube video: {videos[ply_index]}")
         open_url(videos[ply_index], youtube_OR_media)
         accumulated_rotation = 0  # Reset after triggering
         
     elif accumulated_rotation < -rotation_threshold and len(videos) >= 2 and youtube_OR_media == "youtube":
         # Play next video
-        print("\n\nNEXT VIDEO")
+        print("\n\ncomputer_vision.py: NEXT VIDEO")
         ply_index = circular_list(ply_index, direction=1, length=len(videos))
-        print(f"Playing next YouTube video: {videos[ply_index]}")
+        print(f"computer_vision.py: Playing next YouTube video: {videos[ply_index]}")
         open_url(videos[ply_index], youtube_OR_media)
         accumulated_rotation = 0  # Reset after triggering
     
@@ -241,7 +241,7 @@ while cap.isOpened():
                 if "POINTING" in hands_gestures.values():
                     pointing_detected_frames += 1
                     if pointing_detected_frames%5 == 0:
-                        print(f"Pointing gesture detected for {pointing_detected_frames} frames.")
+                        print(f"computer_vision.py: Pointing gesture detected for {pointing_detected_frames} frames.")
                 else:
                     pointing_detected_frames = 0
 
@@ -304,10 +304,10 @@ while cap.isOpened():
                             - in the following lines, write at at most 3 lines of code (for example fix line with errors) and result of the code if possible. Each step in different line.
                     """
                     
-                    print("\n-------thinking--------")
+                    print("\ncomputer_vision.py: -------thinking--------")
                     response_text = gemini_generate_with_image(prompt, screenshot_path, model="gemini-2.0-flash")
-                    print("\n-------Response--------")
-                    print(response_text)
+                    print("\ncomputer_vision.py: -------Response--------")
+                    print(f"computer_vision.py: {response_text}")
 
                     ''' Not Math Equation Detected '''
                     if "MATH EQUATION DETECTED" not in response_text and "CODE DETECTED" not in response_text:
@@ -315,18 +315,18 @@ while cap.isOpened():
                         ''' open youtube url using GEMINI 2 words description '''
                         match_words = re.search(r"^(.*)", response_text)
                         words = match_words.group(0) if match_words else None
-                        print(f"\n{words}")
+                        print(f"\ncomputer_vision.py: {words}")
                         videos = []
                         search_response = search_yt(words)
                         for i, search_result in enumerate(search_response.search_results):
                             if i == 0:
-                                print(f"Playing YouTube video: {search_result.video_id}\nURL: {search_result.url}")
+                                print(f"computer_vision.py: Playing YouTube video: {search_result.video_id}\nURL: {search_result.url}")
                                 open_url(search_result.url, youtube_OR_media)
                             videos.append(search_result.url)
                         ''' open wikipedia url in GEMINI response '''
                         match_url = re.search(r"(https?://[^\s\]]+)", response_text)
                         url = match_url.group(0) if match_url else None
-                        print(f"\n{url}")
+                        print(f"\ncomputer_vision.py: {url}")
                         webbrowser.get('firefox').open_new_tab(url)
                     else:
                         youtube_OR_media = "media"
@@ -334,10 +334,10 @@ while cap.isOpened():
                         match_url = re.search(r"(https?://[^\s\]]+)", response_text)
                         url = match_url.group(0) if match_url else None
                         webbrowser.get('firefox').open_new_tab(url)
-                        print(f"\nURL_wikipedia: {url}")
+                        print(f"\ncomputer_vision.py: URL_wikipedia: {url}")
                         steps = response_text.split("\n")[2:]
                         result = steps[-1]
-                        print(steps)
+                        print(f"computer_vision.py: {steps}")
                         ''' format math equation '''
                         url = format_math(steps)
                         open_url(url, youtube_OR_media)
@@ -362,4 +362,4 @@ while cap.isOpened():
 ''' release resources '''
 cap.release()
 cv2.destroyAllWindows()
-print("\nfree resources")
+print("\ncomputer_vision.py: free resources")
