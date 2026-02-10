@@ -1,6 +1,9 @@
 # number of user request & Image to be processed
 int32 ID
 
+# describe picture
+string scene_description
+
 # what chromecast is showing (YOUTUBE, MATH, CODE, OTHER)
 string prev_mode
 

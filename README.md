@@ -27,6 +27,23 @@ By integrating cutting-edge robotics with user-centric design, the Clever Lamp o
 
 The objective of the project is to have a friend and tool at the disposal of the user. With a simple webcam, AIfred can detect what is appening on the user workspace and provide with usefull insights such as YouTube videos and Wikypedia links. Moreover, AIfred will be able to see your workspace intercat with you with voice (speech-to-speech) and solve on paper math for you.
 
+<br>
+
+The agent now has 6 intelligent modes:
+
+- MATH - Step-by-step solutions with clear explanations
+
+- CODE - Code explanations with key concepts and examples
+
+- DRAWING - YouTube tutorials for artistic creation
+
+- YOUTUBE_TUTORIAL - How-to videos for practical skills
+
+- YOUTUBE_INFO - Educational videos about concepts
+
+- CUSTOM_PAGE - Quick reference info on one screen
+
+
 ## Before running the code
 
 To run the code you will need some prerequisites:

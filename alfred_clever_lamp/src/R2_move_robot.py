@@ -8,21 +8,21 @@ import time
 
 def start_robot():
     global bot
-    rospy.loginfo("\nmove_robot_on_TUI.py: start robot")
+    rospy.loginfo("\nmove_robot.py: start robot")
     bot = InterbotixManipulatorXS("wx250s", "arm", "gripper", init_node=False)
     #bot.arm.set_ee_pose_components(x=0.2, y=0, z=0.3, pitch=1.5)
     bot.arm.set_ee_pose_components(x=0, y=0.15, z=0.25, pitch=0.75)
     bot.arm.set_ee_pose_components(x=-0.15, y=0.15, z=0.25, pitch=-0.3)
     bot.arm.set_ee_pose_components(x=-0.15, y=0.15, z=0.25, pitch=0.3)
     bot.arm.set_ee_pose_components(x=-0.15, y=0.15, z=0.25, pitch=0)
-    rospy.loginfo("\nmove_robot_on_TUI.py: done robot")
+    rospy.loginfo("\nmove_robot.py: done robot")
 
 def out_boundary(x, y):
     # Compute the closest point on the circle boundary
     safe_x = 0.30 * x / math.sqrt(x**2 + y**2)
     safe_y = 0.30 * y / math.sqrt(x**2 + y**2)
 
-    rospy.loginfo("\nmove_robot_on_TUI.py: Out of bounds! Moving to safe position.")
+    rospy.loginfo("\nmove_robot.py: Out of bounds! Moving to safe position.")
     # Perform a 'no' shaking motion
     bot.arm.set_ee_pose_components(x=safe_x, y=safe_y, z=0.3, pitch=1.5, yaw=0.2, accel_time=0.01)
     time.sleep(0.1)

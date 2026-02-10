@@ -156,14 +156,14 @@ def main():
                 output_image, hands_gestures = recognize_gestures(output_image, fingers_statuses, count)
                 if "POINTING" in hands_gestures.values():
                     pointing_detected_frames += 1
-                    if pointing_detected_frames%5 == 0:
+                    if pointing_detected_frames%10 == 0:
                         rospy.loginfo(f"\ndetect_pointing.py: Pointing gesture detected for {pointing_detected_frames} frames.")
                 else:
                     pointing_detected_frames = 0
 
                 ''' if pointing gesture is stable, proceed with publishing '''
                 if pointing_detected_frames >= POINTING_STABLE_THRESHOLD:
-                    rospy.loginfo(f"\ndetect_pointing.py: pointing detected. publish ID: {image_id} and path")
+                    rospy.loginfo(f"\ndetect_pointing.py: Pointing stable. publish ID: {image_id} and path")
                     ''' save image for processing '''
                     cv2.imwrite(IMAGE_PATH, frame)
                     point_object.ID = image_id
