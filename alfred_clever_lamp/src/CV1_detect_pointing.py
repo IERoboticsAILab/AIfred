@@ -8,7 +8,7 @@ from alfred_clever_lamp.msg import PointingObject
 ''' VARIABLES '''
 IMAGE_PATH = "/home/gringo/catkin_ws/src/AIfred_clever_lamp/Videos_and_pictures/pointing_object.jpg"
 POINTING_STABLE_THRESHOLD = 30  # -> Number of frames to consider as stable pointing gesture
-SLEEP_TIME_MS = 10000           # -> time to leave for other nodes to get image and process it before new image
+SLEEP_TIME_MS = 5000           # -> time to leave for other nodes to get image and process it before new image
 CAMERA_WIDTH = 600
 CAMERA_HEIGHT = 500
 

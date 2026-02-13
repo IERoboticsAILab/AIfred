@@ -117,7 +117,7 @@ INSIGHT: [Interesting insight or practical application]
 previous_mode = "custom_page" # modes: math, code, drawing, youtube_tutorial, youtube_info, custom_page
 
 ''' SETUP GEMINI API '''
-load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), "../scripts/.env"))
+load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), ".env"))
 GEMINI_API = os.environ.get("GEMINI_API_KEY")
 GEMINI_MODEL = "gemini-2.0-flash"
 
@@ -865,7 +865,7 @@ def process_image(image_path, prompt):
     elif current_mode in ["drawing", "youtube_tutorial", "youtube_info"]:
         # For YouTube modes, return search queries
         search_queries = structured_content.get('search_queries', [])
-        print(search_queries)
+        #print(search_queries)
         # use search queries small phrases to create YouTube search URLs
         urls = search_yt_urls(search_queries)
     
