@@ -57,6 +57,6 @@ if __name__ == '__main__':
         if math.sqrt(x**2 + y**2) > 0.30:
             out_boundary(x, y)
         else:
-            bot.arm.set_ee_pose_components(x=x, y=y, z=0.3, pitch=1.5, yaw=0)
+            bot.arm.set_ee_pose_components(x=x-0.09, y=y, z=0.3, pitch=1.5, yaw=0)
 
         rate.sleep()
