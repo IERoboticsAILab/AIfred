@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<launch>
+  <!-- WX250S TROSSEN ROBOT ARM -->
+  <arg name="robot_model"                       default="wx250s"/>
+  <arg name="robot_name"                        default="$(arg robot_model)"/>
+  <arg name="base_link_frame"                   default="base_link"/>
+  <arg name="show_ar_tag"                       default="false"/>
+  <arg name="show_gripper_bar"                  default="true"/>
+  <arg name="show_gripper_fingers"              default="true"/>
+  <arg name="use_world_frame"                   default="true"/>
+  <arg name="external_urdf_loc"                 default=""/>
+  <arg name="use_rviz"                          default="false"/>
+  <arg name="motor_configs"                     default="$(find interbotix_xsarm_control)/config/$(arg robot_model).yaml"/>
+  <arg name="mode_configs"                      default="$(find interbotix_xsarm_control)/config/modes.yaml"/>
+  <arg name="load_configs"                      default="true"/>
+  <arg name="use_sim"                           default="false"/>
+
+  <arg name="xs_sdk_type" value="xs_sdk" unless="$(arg use_sim)"/>
+  <arg name="xs_sdk_type" value="xs_sdk_sim" if="$(arg use_sim)"/>
+
+  <include file="$(find interbotix_xsarm_descriptions)/launch/xsarm_description.launch">
+    <arg name="robot_model"                       value="$(arg robot_model)"/>
+    <arg name="robot_name"                        value="$(arg robot_name)"/>
+    <arg name="base_link_frame"                   value="$(arg base_link_frame)"/>
+    <arg name="show_ar_tag"                       value="$(arg show_ar_tag)"/>
+    <arg name="show_gripper_bar"                  value="$(arg show_gripper_bar)"/>
+    <arg name="show_gripper_fingers"              value="$(arg show_gripper_fingers)"/>
+    <arg name="use_world_frame"                   value="$(arg use_world_frame)"/>
+    <arg name="external_urdf_loc"                 value="$(arg external_urdf_loc)"/>
+    <arg name="use_rviz"                          value="$(arg use_rviz)"/>
+  </include>
+
+  <node
+    name="xs_sdk"
+    pkg="interbotix_xs_sdk"
+    type="$(arg xs_sdk_type)"
+    output="screen"
+    ns="$(arg robot_name)">
+    <param name="motor_configs"                   value="$(arg motor_configs)"/>
+    <param name="mode_configs"                    value="$(arg mode_configs)"/>
+    <param name="load_configs"                    value="$(arg load_configs)"/>
+  </node>
+
+
+
+  <!-- NATNET OPTITRACK -->
+  <arg name="log_internals" default="false"/>
+  <arg name="log_frames" default="false"/>
+  <arg name="log_latencies" default="false"/>
+
+  <arg name="serverIP" default="10.205.3.3"/>
+  <arg name="clientIP" default="10.205.3.150"/>
+  <arg name="serverType" default="unicast"/>
+  <arg name="multicastAddress" default="239.255.42.99"/>
+  <arg name="serverCommandPort" default="1510"/>
+  <arg name="serverDataPort" default="1511"/>
+  <arg name="globalFrame" default="world"/>
+
+  <arg name="pub_rigid_body" default="true"/> 
+  <arg name="pub_rigid_body_marker" default="true"/>  
+  <arg name="pub_individual_marker" default="false"/>
+  <arg name="pub_pointcloud" default="false"/>
+
+  <arg name="conf_file" default="initiate.yaml"/>
+
+  <group ns="conn_params">
+    <param name="serverIP" value="$(arg serverIP)" type="str"/>
+    <param name="clientIP" value="$(arg clientIP)" type="str"/>
+    <param name="serverType" value="$(arg serverType)" type="str"/>
+    <param name="multicastAddress" value="$(arg multicastAddress)" type="str"/>
+    <param name="serverCommandPort" value="$(arg serverCommandPort)" type="int"/>
+    <param name="serverDataPort" value="$(arg serverDataPort)" type="int"/>
+    <param name="globalFrame" value="$(arg globalFrame)" type="str"/>
+  </group>
+  
+  <node pkg="natnet_ros_cpp" type="natnet_ros_cpp" name="natnet_ros" output="screen">    
+    <rosparam file="$(find natnet_ros_cpp)/config/$(arg conf_file)"/>   
+  
+    <param name="log_internals" value="$(arg log_internals)" type="bool"/>
+    <param name="log_frames" value="$(arg log_frames)" type="bool"/>
+    <param name="log_latencies" value="$(arg log_latencies)" type="bool"/>
+
+    <param name="pub_rigid_body" value="$(arg pub_rigid_body)" type="bool"/>
+    <param name="pub_rigid_body_marker" value="$(arg pub_rigid_body_marker)" type="bool"/>
+    <param name="pub_individual_marker" value="$(arg pub_individual_marker)" type="bool"/>
+    <param name="pub_pointcloud" value="$(arg pub_pointcloud)" type="bool"/>
+  </node>
+
+
+
+  <!-- ALFRED CLEVER LAMP NODES -->
+  <node pkg="alfred_clever_lamp" type="R1_brodcast_marker.py" name="tf2_broadcaster" output="screen"/>
+  <node pkg="alfred_clever_lamp" type="R2_move_robot.py" name="move_robot" output="screen"/>
+  <node pkg="alfred_clever_lamp" type="CV1_detect_pointing.py" name="pub_pointing_image" output="screen"/>
+  <node pkg="alfred_clever_lamp" type="CV2_process_image.py" name="process_image_gemini" output="screen"/>
+  <node pkg="alfred_clever_lamp" type="CV3_chromcast.py" name="cromcast_controller" output="screen"/>
+
+</launch>
