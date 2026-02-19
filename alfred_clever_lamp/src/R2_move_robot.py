@@ -57,6 +57,8 @@ if __name__ == '__main__':
         if math.sqrt(x**2 + y**2) > 0.30:
             out_boundary(x, y)
         else:
-            bot.arm.set_ee_pose_components(x=x-0.09, y=y, z=0.3, pitch=1.5, yaw=0)
-
+            start_time = time.time()
+            bot.arm.set_ee_pose_components(x=x-0.17, y=y, z=0.3, pitch=1.5, yaw=0)
+            end_time = time.time() - start_time
+            rospy.loginfo(f"\nmove_robot.py: Time taken to move: {end_time:.2f} seconds")
         rate.sleep()
