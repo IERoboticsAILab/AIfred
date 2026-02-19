@@ -134,6 +134,10 @@ To run the code you will need some prerequisites:
     ```
     roslaunch natnet_ros_cpp gui_natnet_ros.launch
     ```
+    OR
+    ```
+    roslaunch natnet_ros_cpp natnet_ros.launch serverIP:=10.205.3.3 clientIP:=10.205.3.150 pub_rigid_body:=true pub_rigid_body_marker:=true serverType:=unicast
+    ```
 
     <div align="center">
     <img src="https://github.com/IERoboticsAILab/clever_lamp/blob/main/Videos_and_pictures/natnet_setup.png" alt="natnet setup" width="550">

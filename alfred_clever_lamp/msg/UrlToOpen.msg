@@ -1,14 +1,8 @@
-# number of user request & Image to be processed
-int32 ID
-
-# describe picture
+# describe scene
 string scene_description
 
-# what chromecast is showing (YOUTUBE, MATH, CODE, OTHER)
-string prev_mode
-
-# what chromecast will show now (YOUTUBE, MATH, CODE, OTHER)
-string current_mode
+# witch mode we are in (Mode [0 -> Arm Controll, 1 -> Homework, 2 -> Generate Image, 3 -> Draw Mode])
+int32 current_mode
 
 # list of URLs
 string[] url_list

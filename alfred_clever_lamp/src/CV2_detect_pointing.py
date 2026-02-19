@@ -19,18 +19,6 @@ mp_drawing = mp.solutions.drawing_utils
 
 ''' HELPER FUNCTIONS '''
 def detect_hands_landmarks(image, hands, draw=True):
-    '''
-    This function performs hands landmarks detection on an image.
-    Args:
-        image:   The input image with prominent hand(s) whose landmarks needs to be detected.
-        hands:   The Hands function required to perform the hands landmarks detection.
-        draw:    A boolean value that is if set to true the function draws hands landmarks on the output image.
-        display: A boolean value that is if set to true the function displays the original input image, and the output
-                 image with hands landmarks drawn if it was specified and returns nothing.
-    Returns:
-        output_image: A copy of input image with the detected hands landmarks drawn if it was specified.
-        results:      The output of the hands landmarks detection on the input image.
-    '''
     # Create a copy of the input image to draw landmarks on.
     output_image = image.copy()
     # Convert the image from BGR into RGB format.
@@ -51,25 +39,6 @@ def detect_hands_landmarks(image, hands, draw=True):
     # Return the output image and results of hands landmarks detection.
     return output_image, results
 def countFingers(image, results):
-    '''
-    to check if finger is up, we compare
-    with the previus joint in the x, y plane,
-    and we see with one is higher
-    (for tumb we chech x coordinate, for other finger the y coordinate)
-    '''
-    '''
-    This function will count the number of fingers up for each hand in the image.
-    Args:
-        image:   The image of the hands on which the fingers counting is required to be performed.
-        results: The output of the hands landmarks detection performed on the image of the hands.
-        draw:    A boolean value that is if set to true the function writes the total count of fingers of the hands on the
-                 output image.
-        display: A boolean value that is if set to true the function displays the resultant image and returns nothing.
-    Returns:
-        output_image:     A copy of the input image with the fingers count written, if it was specified.
-        fingers_statuses: A dictionary containing the status (i.e., open or close) of each finger of both hands.
-        count:            A dictionary containing the count of the fingers that are up, of both hands.
-    '''
     # Get the height and width of the input image.
     height, width, _ = image.shape
     # Create a copy of the input image to write the count of fingers on.
@@ -157,13 +126,13 @@ def main():
                 if "POINTING" in hands_gestures.values():
                     pointing_detected_frames += 1
                     if pointing_detected_frames%10 == 0:
-                        rospy.loginfo(f"\ndetect_pointing.py: Pointing gesture detected for {pointing_detected_frames} frames.")
+                        rospy.loginfo(f"Pointing gesture detected for {pointing_detected_frames} frames.")
                 else:
                     pointing_detected_frames = 0
 
                 ''' if pointing gesture is stable, proceed with publishing '''
                 if pointing_detected_frames >= POINTING_STABLE_THRESHOLD:
-                    rospy.loginfo(f"\ndetect_pointing.py: Pointing stable. publish ID: {image_id} and path")
+                    rospy.loginfo(f"Pointing stable. publish ID: {image_id} and path")
                     ''' save image for processing '''
                     cv2.imwrite(IMAGE_PATH, frame)
                     point_object.ID = image_id
@@ -178,13 +147,13 @@ def main():
                 break
 
     except KeyboardInterrupt:
-        rospy.loginfo("detect_pointing.py: Interrupted by user")
+        rospy.loginfo("Interrupted by user")
     finally:
         # Cleanup
         cap.release()
         cv2.destroyAllWindows()
         hands.close()
-        rospy.loginfo("detect_pointing.py: Resources released")
+        rospy.loginfo("Resources released")
 
 if __name__ == '__main__':
     main()

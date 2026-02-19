@@ -5,7 +5,7 @@ import tf2_ros
 import geometry_msgs.msg
 from geometry_msgs.msg import PoseStamped
 
-global pos_base 
+pos_base = (0.0, 0.0, 0.0)
 
 def pose_callback(msg):
     global pos_base
