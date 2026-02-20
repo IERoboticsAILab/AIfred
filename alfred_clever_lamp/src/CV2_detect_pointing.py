@@ -11,6 +11,7 @@ POINTING_STABLE_THRESHOLD = 30  # -> Number of frames to consider as stable poin
 SLEEP_TIME_MS = 5000           # -> time to leave for other nodes to get image and process it before new image
 CAMERA_WIDTH = 600
 CAMERA_HEIGHT = 500
+SHOW_WEBCAM = False
 
 ''' SET UP HANDS MODULE '''
 mp_hands = mp.solutions.hands
@@ -118,7 +119,8 @@ def main():
                 break
 
             output_image, results = detect_hands_landmarks(frame, hands, draw=True)
-            cv2.imshow('Webcam with Hand Landmarks', output_image)
+            if SHOW_WEBCAM:
+                cv2.imshow('Webcam with Hand Landmarks', output_image)
             ''' count fingers and detect gestures '''
             if results.multi_hand_landmarks:
                 output_image, fingers_statuses, count = countFingers(frame, results)

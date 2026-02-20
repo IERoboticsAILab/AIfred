@@ -7,9 +7,6 @@ import threading
 import os
 import shutil
 import socket
-from dotenv import load_dotenv
-import cv2
-from PIL import Image as PIL_Image
 
 
 
@@ -18,18 +15,6 @@ ARM_CONTROL_IMAGE_PATH = "/home/gringo/catkin_ws/src/AIfred_clever_lamp/Videos_a
 HOMEWORK_MODE_IMAGE_PATH = "/home/gringo/catkin_ws/src/AIfred_clever_lamp/Videos_and_pictures/1_homework.png"
 GENERATE_IMAGE_MODE_IMAGE_PATH = "/home/gringo/catkin_ws/src/AIfred_clever_lamp/Videos_and_pictures/2_generate_image.png"
 DRAW_MODE_IMAGE_PATH = "/home/gringo/catkin_ws/src/AIfred_clever_lamp/Videos_and_pictures/3_draw.png"
-ALLIGN_PAPER_IMAGE_PATH = "/home/gringo/catkin_ws/src/AIfred_clever_lamp/Videos_and_pictures/3_1_draw.png"
-
-''' SETUP GEMINI API '''
-load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), ".env"))
-GEMINI_API = os.environ.get("GEMINI_API_KEY")
-GEMINI_MODEL = "gemini-2.0-flash"
-
-''' PROMPTS '''
-PROMPT_HOMEWORK_MODE = ""
-PROMPT_GENERATE_IMAGE_MODE = ""
-PROMPT_DRAW_MODE = ""
-
 
 
 ''' HELPER FUNCTIONS '''
@@ -104,23 +89,14 @@ def _is_port_in_use(port: int) -> bool:
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         return s.connect_ex(("localhost", port)) == 0
 
-''' CALLBACKS '''
-def pointing_object_callback(msg):
-    global pointing_object
-    pointing_object = True
-    rospy.loginfo(f"Received pointing object: {msg.ID}")
-
 def mode_callback(msg):
-    global pointing_object
-    rospy.loginfo(pointing_object)
-
     mode = msg.mode
     url_msg = UrlToOpen()
     rospy.loginfo(f"Received mode: {mode}")
 
     if mode == 0:
         rospy.loginfo("Arm Control Mode Activated")
-        url_msg.scene_description = "User in Arm Control Mode, taking familiarity with robot."
+        url_msg.scene_description = "Arm Control Mode" #"User in Arm Control Mode, taking familiarity with robot."
         url_msg.current_mode = mode
         urls = [create_custom_page_from_image(image_path=ARM_CONTROL_IMAGE_PATH)]
         url_msg.url_list = urls
@@ -131,56 +107,44 @@ def mode_callback(msg):
 
     elif mode == 1:
         rospy.loginfo("Homework Mode Activated")
-
-        if pointing_object:
-            url_msg.scene_description = "pass"
-            url_msg.current_mode = mode
-            urls = [create_custom_page_from_image(image_path=HOMEWORK_MODE_IMAGE_PATH), "http://gemini"]
-            url_msg.url_list = urls
-            url_msg.i = 0
-            rospy.loginfo(f"Publishing URLs: {url_msg.url_list}")
-            pub.publish(url_msg)
-        pointing_object = False
+        url_msg.scene_description = "Homework Mode" #"User in Homework Mode, doing general task need key concepts, solutions and step-by-step guidance."
+        url_msg.current_mode = mode
+        urls = [create_custom_page_from_image(image_path=HOMEWORK_MODE_IMAGE_PATH)]
+        url_msg.url_list = urls
+        url_msg.i = 0
+        rospy.loginfo(f"Publishing URLs: {url_msg.url_list}")
+        pub.publish(url_msg)
 
 
     elif mode == 2:
         rospy.loginfo("Generate Image Mode Activated")
-
-        if pointing_object:
-            url_msg.scene_description = "pass"
-            url_msg.current_mode = mode
-            urls = [create_custom_page_from_image(image_path=GENERATE_IMAGE_MODE_IMAGE_PATH), "http://gemini"]
-            url_msg.url_list = urls
-            url_msg.i = 0
-            rospy.loginfo(f"Publishing URLs: {url_msg.url_list}")
-            pub.publish(url_msg)
-        pointing_object = False
+        url_msg.scene_description = "Generate Image Mode" #"User in Generate Image Mode, generating images based on user text and sketches on paper."
+        url_msg.current_mode = mode
+        urls = [create_custom_page_from_image(image_path=GENERATE_IMAGE_MODE_IMAGE_PATH)]
+        url_msg.url_list = urls
+        url_msg.i = 0
+        rospy.loginfo(f"Publishing URLs: {url_msg.url_list}")
+        pub.publish(url_msg)
 
 
     elif mode == 3:
         rospy.loginfo("Draw Mode Activated")
+        url_msg.scene_description = "Draw Mode" #"User in Draw Mode, drawing on paper and getting youtube tutorials and inspirations for improving drawing."
+        url_msg.current_mode = mode
+        urls = [create_custom_page_from_image(image_path=DRAW_MODE_IMAGE_PATH)]
+        url_msg.url_list = urls
+        url_msg.i = 0
+        rospy.loginfo(f"Publishing URLs: {url_msg.url_list}")
+        pub.publish(url_msg)
 
-        if pointing_object:
-            url_msg.scene_description = "pass"
-            url_msg.current_mode = mode
-            urls = [create_custom_page_from_image(image_path=DRAW_MODE_IMAGE_PATH), create_custom_page_from_image(image_path=ALLIGN_PAPER_IMAGE_PATH), "http://gemini"]
-            url_msg.url_list = urls
-            url_msg.i = 0
-            rospy.loginfo(f"Publishing URLs: {url_msg.url_list}")
-            pub.publish(url_msg)
-        pointing_object = False
-
-            
     else:
         rospy.logwarn("Unknown mode received")
 
+
 ''' MAIN '''
 if __name__ == '__main__':
-    pointing_object = False
-
     rospy.init_node('open_mode')
     pub = rospy.Publisher('/urls_to_open', UrlToOpen, queue_size=1)
 
     rospy.Subscriber('/mode', Mode, callback=mode_callback, queue_size=1)
-    rospy.Subscriber('/point_image', PointingObject, callback=pointing_object_callback, queue_size=1)
     rospy.spin()

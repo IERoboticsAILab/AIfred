@@ -98,34 +98,11 @@ To run the code you will need some prerequisites:
 
 7. Cast the tab of chrome with chromcast that is on the robot arm end effector Kodak Projector
 
-8. Create virtual environment and download all the dependencies for computer vision
-<details>
-  <summary><strong>Dependencies</strong></summary>
+8. Create virtual environment and download all the dependencies for computer vision 
 
-    ```python
-    ''' IMPORT MODULES '''
-    import sys
-    import os
-    import cv2
-    import re
-    from PIL import Image as PIL_Image
-    import google.generativeai as genai
-    import mediapipe as mp
-    from dotenv import load_dotenv
-    sys.path.append(os.path.join(os.path.dirname(__file__), '../scripts'))
-    from my_functions import countFingers, detectHandsLandmarks, search_yt, circular_list, open_url, format_math
-    import webbrowser
-    import googleapiclient.discovery
-    import rospy
-    from tf.transformations import euler_from_quaternion
-    import geometry_msgs.msg
-    from geometry_msgs.msg import PoseStamped
-    import math
-    import subprocess
-    import pyautogui
-    import time
-    ```
-</details>
+```bash
+uv sync
+```
 
 #### Run demo
 

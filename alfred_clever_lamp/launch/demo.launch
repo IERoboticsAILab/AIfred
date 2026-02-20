@@ -94,5 +94,7 @@
   <node pkg="alfred_clever_lamp" type="CV1_pub_mode.py" name="mode_publisher" output="screen"/>
   <node pkg="alfred_clever_lamp" type="CV2_detect_pointing.py" name="pub_pointing_image" output="screen"/>
   <node pkg="alfred_clever_lamp" type="CV3_open_mode.py" name="open_mode" output="screen"/>
+  <node pkg="alfred_clever_lamp" type="CV4_process_img.py" name="process_img" output="screen"/>
+  <node pkg="alfred_clever_lamp" type="CV5_open_urls.py" name="chromcast_controller" output="screen"/>
 
 </launch>
