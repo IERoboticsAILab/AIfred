@@ -14,6 +14,8 @@ import base64
 import requests
 from io import BytesIO
 import re
+import json
+from pathlib import Path
 
 
 
@@ -25,11 +27,14 @@ did_search_already = False
 ''' HTTP SERVER CONFIG '''
 SERVE_DIR = "/tmp/alfred_web"
 PORT = 8765
+# 1. Prepare the serving directory
+os.makedirs(SERVE_DIR, exist_ok=True)
 
 
 ''' IMAGE PATHS '''
 ALLIGN_PAPER_IMAGE_PATH = "/home/gringo/catkin_ws/src/AIfred_clever_lamp/Videos_and_pictures/3_1_draw.png"
-SAVE_GENERATED_IMG_PATH = "/home/gringo/catkin_ws/src/AIfred_clever_lamp/Videos_and_pictures/generated_image.png"
+THINKING_IMAGE_PATH = "/home/gringo/catkin_ws/src/AIfred_clever_lamp/Videos_and_pictures/0_thinking.png"
+OUTPUT_GENERATED_IMG_PATH = "/home/gringo/catkin_ws/src/AIfred_clever_lamp/Videos_and_pictures/generated_image.png"
 
 
 ''' SETUP GEMINI API '''
@@ -81,7 +86,54 @@ SOLUTION: [The complete final answer or conclusion — precise, clear, and self-
 - Write as if explaining to a curious student who wants to truly understand
 """
 PROMPT_GENERATE_IMAGE_MODE = """
-re-draw the given image in Da Vinci's style, with the same composition but using his characteristic shading and line work. Keep the subject recognizable but transform it with Da Vinci's artistic techniques.
+You are an expert Visual Prompt Engineer.
+
+You will receive:
+1) An image (a drawing, sketch, diagram, or rough concept made by the user)
+2) Context about what the user wants to achieve (if available)
+
+Your task is to analyze the image carefully and generate a highly effective prompt that will be given — together with the same image — to an advanced AI image generation model.
+
+----------------------------------------------------
+YOUR OBJECTIVE
+----------------------------------------------------
+Write a detailed, precise, and optimized image-generation prompt that:
+
+• Understands what the user drew
+• Understands the user's intention (e.g., realistic render, scientific diagram, clean vector version, 3D render, etc.)
+• Enhances clarity while preserving the original structure and meaning
+• Specifies style, rendering quality, materials, lighting, layout, and level of detail when relevant
+• Produces a professional-quality final image
+
+Do NOT describe the image for the user.
+Do NOT explain your reasoning.
+ONLY produce the final prompt.
+
+----------------------------------------------------
+INTENT DETECTION
+----------------------------------------------------
+If the image is:
+- A hand-drawn object or scene → generate a prompt to render it realistically (or in the requested style).
+- A technical or scientific sketch → generate a clean, publication-ready diagram.
+- A workflow/pipeline → generate a structured, professional methodology diagram.
+- A product concept → generate a polished concept render.
+- Something else → infer the most logical high-quality visual outcome.
+
+----------------------------------------------------
+PROMPT WRITING RULES
+----------------------------------------------------
+Your generated prompt must:
+• Be clear and specific
+• Include style instructions
+• Include rendering details (lighting, materials, realism level, etc. when relevant)
+• Preserve proportions and structure from the original sketch
+• Avoid changing the core idea
+• Be written as if instructing a top-tier image model (e.g., Midjourney, DALL·E, SDXL)
+
+----------------------------------------------------
+OUTPUT FORMAT (strict)
+----------------------------------------------------
+PROMPT: [Write only the final optimized image-generation prompt here]
 """
 PROMPT_DRAW_MODE = """
 You are AIfred, an intelligent assistant embedded in a smart lamp that watches a student's desk via camera.
@@ -113,13 +165,6 @@ QUERY_3: [technique-focused query — the core skill needed, e.g. "fur texture d
 
 ''' HELPER FUNCTIONS '''
 def create_custom_page_from_image(image_path):
-    # --- Config ---
-    SERVE_DIR = "/tmp/alfred_web"
-    PORT = 8765
-
-    # 1. Prepare the serving directory
-    os.makedirs(SERVE_DIR, exist_ok=True)
-
     # 2. Copy the image into the serving directory
     image_filename = os.path.basename(image_path)
     dest_path = os.path.join(SERVE_DIR, image_filename)
@@ -211,63 +256,11 @@ def gemini_generate_with_image(image_path: str, prompt_text: str, model: str = G
         raise RuntimeError(f"No candidates in response: {data}")
     parts = candidates[0].get("content", {}).get("parts", [])
     return "".join(p.get("text", "") for p in parts).strip()
-def gemini_generate_image(image_path, prompt_text, save_path=SAVE_GENERATED_IMG_PATH, model=GEMINI_GENERATE_IMG_MODEL) -> str:
-    cv2_image = cv2.imread(image_path)
-    cv2_image_rgb = cv2.cvtColor(cv2_image, cv2.COLOR_BGR2RGB)
-    pil_image = PIL_Image.fromarray(cv2_image_rgb)
-    buffered = BytesIO()
-    pil_image.save(buffered, format="JPEG")
-    img_base64 = base64.b64encode(buffered.getvalue()).decode('utf-8')
-
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={GEMINI_API}"
-    payload = {
-        "contents": [
-            {
-                "parts": [
-                    {
-                        "inline_data": {
-                            "mime_type": "image/jpeg",
-                            "data": img_base64
-                        }
-                    },
-                    {
-                        "text": prompt_text
-                    }
-                ]
-            }
-        ],
-        "generationConfig": {
-            "responseModalities": ["TEXT", "IMAGE"]
-        }
-    }
-
-    r = requests.post(url, json=payload, timeout=60)
-    r.raise_for_status()
-    data = r.json()
-
-    candidates = data.get("candidates", [])
-    if not candidates:
-        raise RuntimeError(f"No candidates in response: {data}\n\n\n\n\nNo candidates in response")
-
-    for part in candidates[0].get("content", {}).get("parts", []):
-        if "inline_data" in part and part["inline_data"]["mime_type"].startswith("image/"):
-            img_bytes = base64.b64decode(part["inline_data"]["data"])
-            os.makedirs(os.path.dirname(save_path), exist_ok=True)
-            with open(save_path, "wb") as f:
-                f.write(img_bytes)
-            rospy.loginfo(f"[AIfred] Generated image saved to: {save_path}")
-            return save_path
-
-    # Log text parts to help debug if no image came back
-    for part in candidates[0].get("content", {}).get("parts", []):
-        if "text" in part:
-            rospy.logwarn(f"[AIfred] Model returned text instead of image: {part['text']}")
-
-    raise RuntimeError(f"No image found in response parts: {data}\n\n\n\n\nNo image found in response parts")
 
 def parse_homework_response(response: str):
     steps = []
     solution = ""
+    title = ""
     step_pattern = re.compile(r"STEP_\d+:\s*(.*)")
     solution_pattern = re.compile(r"SOLUTION:\s*(.*)")
     title_pattern = re.compile(r"TITLE:\s*(.*)")
@@ -291,15 +284,14 @@ def parse_draw_response(response: str):
             queries.append(query_match.group(1).strip())
     return queries
 def parse_generate_image_response(response: str):
-    """Extract DESCRIPTION and IMAGE_PROMPT from Gemini's response."""
-    description = ""
-    image_prompt = ""
+    """Extract PROMPT from Gemini's response."""
+    prompt = ""
+    prompt_pattern = re.compile(r"PROMPT:\s*(.*)")
     for line in response.splitlines():
-        if line.startswith("DESCRIPTION:"):
-            description = line[len("DESCRIPTION:"):].strip()
-        elif line.startswith("IMAGE_PROMPT:"):
-            image_prompt = line[len("IMAGE_PROMPT:"):].strip()
-    return description, image_prompt
+        prompt_match = prompt_pattern.match(line)
+        if prompt_match:
+            prompt = prompt_match.group(1).strip()
+    return prompt
 
 def search_yt_urls(search_queries):
     urls = []
@@ -436,6 +428,56 @@ def generate_homework_html_pages(title, steps, solution):
         urls.append(f"http://localhost:{PORT}/{filename}")
 
     return urls
+def generate_img(prompt, input_image):
+    URL = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_GENERATE_IMG_MODEL}:generateContent"
+    OUT_PNG = Path(OUTPUT_GENERATED_IMG_PATH)
+    input_image = Path(input_image)
+
+    img_b64 = base64.b64encode(input_image.read_bytes()).decode("utf-8")
+    payload = {
+        "contents": [{
+            "parts": [
+                {"text": prompt.strip()},
+                {"inline_data": {"mime_type": "image/jpeg", "data": img_b64}}
+            ]
+        }],
+        "generationConfig": {
+            "temperature": 0.2
+        }
+    }
+
+    headers = {
+        "x-goog-api-key": GEMINI_API,
+        "Content-Type": "application/json",
+    }
+
+    r = requests.post(URL, headers=headers, data=json.dumps(payload), timeout=180)
+    if not r.ok:
+        rospy.loginfo(f"HTTP {r.status_code}")
+        rospy.loginfo(r.text)
+        raise SystemExit(1)
+
+    resp = r.json()
+
+    # Extract first image "data" we find
+    b64_out = None
+    for cand in resp.get("candidates", []):
+        content = cand.get("content", {})
+        for part in content.get("parts", []):
+            inline = part.get("inlineData") or part.get("inline_data")
+            if inline and inline.get("data"):
+                b64_out = inline["data"]
+                break
+        if b64_out:
+            break
+
+    if not b64_out:
+        rospy.loginfo("No image found in response. Full response:")
+        rospy.loginfo(json.dumps(resp, indent=2)[:4000])
+        raise SystemExit(2)
+
+    OUT_PNG.write_bytes(base64.b64decode(b64_out))
+    rospy.loginfo(f"Saved: {OUT_PNG.resolve()}")
 
 def process_image_and_get_urls(image_path, prompt, mode):
     urls = []
@@ -444,18 +486,16 @@ def process_image_and_get_urls(image_path, prompt, mode):
     if mode == 1: # homework_mode
         title, steps, solutions = parse_homework_response(gemini_response)
         urls = generate_homework_html_pages(title, steps, solutions)
+    elif mode == 2:
+        prompt_generate_img = parse_generate_image_response(gemini_response)
+        generate_img(prompt_generate_img, image_path)
+        urls.append(create_custom_page_from_image(OUTPUT_GENERATED_IMG_PATH))
     elif mode == 3: # draw_mode
         queries = parse_draw_response(gemini_response)
         urls = search_yt_urls(queries)
     else:
         pass
     return urls
-def process_image_and_get_image(image_path, prompt):
-    url = []
-
-    save_generated_image_path = gemini_generate_image(image_path, prompt)
-    url.append(create_custom_page_from_image(save_generated_image_path))
-    return url
 
 
 
@@ -471,12 +511,21 @@ def pointing_object_callback(msg):
     urls_to_open = []
     if not did_search_already:
         if mode == 1: # homework_mode
+            url_msg.url_list = [create_custom_page_from_image(THINKING_IMAGE_PATH)]
+            pub.publish(url_msg)
+
             urls_to_open = process_image_and_get_urls(img_path, PROMPT_HOMEWORK_MODE, mode=1)
             url_msg.scene_description = "Generate links to solve user problem"
         elif mode == 2: # generate_image_mode
-            urls_to_open = process_image_and_get_image(img_path, PROMPT_GENERATE_IMAGE_MODE)
+            url_msg.url_list = [create_custom_page_from_image(THINKING_IMAGE_PATH)]
+            pub.publish(url_msg)
+
+            urls_to_open = process_image_and_get_urls(img_path, PROMPT_GENERATE_IMAGE_MODE, mode=2)
             url_msg.scene_description = "Generate image based on user sketch and/or text"
         elif mode == 3: # draw_mode
+            url_msg.url_list = [create_custom_page_from_image(THINKING_IMAGE_PATH)]
+            pub.publish(url_msg)
+
             urls_to_open.append(create_custom_page_from_image(ALLIGN_PAPER_IMAGE_PATH))
             urls_to_open.extend(process_image_and_get_urls(img_path, PROMPT_DRAW_MODE, mode=3))
             url_msg.scene_description = "Generate youtube links to improve user drawing"
