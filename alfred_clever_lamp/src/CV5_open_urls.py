@@ -62,8 +62,8 @@ def open_url(url):
                  'windowactivate', '--sync', 'key', 'f'], delay=0.2)
     
     # Exit browser fullscreen (F11)
-    run_xdotool(['search', '--onlyvisible', '--class', 'chrome', 
-                 'windowactivate', '--sync', 'key', 'F11'], delay=0.2)
+    #run_xdotool(['search', '--onlyvisible', '--class', 'chrome', 
+    #             'windowactivate', '--sync', 'key', 'F11'], delay=0.2)
     
     time.sleep(1.0)
     # Focus address bar (Ctrl+L)
@@ -71,8 +71,8 @@ def open_url(url):
                  'windowactivate', '--sync', 'key', 'ctrl+l'], delay=0.1)
     
     # Clear address bar
-    run_xdotool(['search', '--onlyvisible', '--class', 'chrome', 
-                 'windowactivate', '--sync', 'key', 'ctrl+a'], delay=0.05)
+    #run_xdotool(['search', '--onlyvisible', '--class', 'chrome', 
+    #             'windowactivate', '--sync', 'key', 'ctrl+a'], delay=0.05)
     
     # Type URL
     run_xdotool(['search', '--onlyvisible', '--class', 'chrome', 
@@ -83,14 +83,18 @@ def open_url(url):
                  'key', 'Return'], delay=0.5)
     
     # Enter browser fullscreen (F11)
-    run_xdotool(['search', '--onlyvisible', '--class', 'chrome', 
-                 'windowactivate', '--sync', 'key', 'F11'], delay=1.5)
+    #run_xdotool(['search', '--onlyvisible', '--class', 'chrome', 
+    #             'windowactivate', '--sync', 'key', 'F11'], delay=1.5)
     
     # Enter YouTube fullscreen (press 'f')
     # Wait longer for page to load
-    time.sleep(1.5)
+    #time.sleep(1.5)
     run_xdotool(['search', '--onlyvisible', '--class', 'chrome', 
                  'windowactivate', '--sync', 'key', 'f'], delay=0.2)
+    
+    # open existing firefox tab
+    run_xdotool(['search', '--onlyvisible', '--class', 'firefox', 
+                 'windowactivate', '--sync'], delay=0.2)
     
     rospy.loginfo(f"Successfully opened and fullscreened: {url}")
 
