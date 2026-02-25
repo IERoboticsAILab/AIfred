@@ -16,6 +16,7 @@ from io import BytesIO
 import re
 import json
 from pathlib import Path
+import time
 
 
 
@@ -532,6 +533,7 @@ def pointing_object_callback(msg):
         else:
             rospy.loginfo("No valid mode selected or already searched.")
         
+        time.sleep(1)
         url_msg.current_mode = mode
         url_msg.url_list = urls_to_open
         url_msg.i = 0
