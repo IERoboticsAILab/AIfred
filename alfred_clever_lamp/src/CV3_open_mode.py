@@ -7,6 +7,7 @@ import threading
 import os
 import shutil
 import socket
+import subprocess
 
 
 
@@ -15,6 +16,8 @@ ARM_CONTROL_IMAGE_PATH = "/home/gringo/catkin_ws/src/AIfred_clever_lamp/Videos_a
 HOMEWORK_MODE_IMAGE_PATH = "/home/gringo/catkin_ws/src/AIfred_clever_lamp/Videos_and_pictures/1_homework.png"
 GENERATE_IMAGE_MODE_IMAGE_PATH = "/home/gringo/catkin_ws/src/AIfred_clever_lamp/Videos_and_pictures/2_generate_image.png"
 DRAW_MODE_IMAGE_PATH = "/home/gringo/catkin_ws/src/AIfred_clever_lamp/Videos_and_pictures/3_draw.png"
+INSTRUCTIONS_IMAGE_PATH = "/home/gringo/catkin_ws/src/AIfred_clever_lamp/Videos_and_pictures/0_instructions.png"
+
 
 
 ''' HELPER FUNCTIONS '''
@@ -145,6 +148,13 @@ def mode_callback(msg):
 if __name__ == '__main__':
     rospy.init_node('open_mode')
     pub = rospy.Publisher('/urls_to_open', UrlToOpen, queue_size=1)
+
+    # create instructions page at the beginning
+    instructions_url = create_custom_page_from_image(image_path=INSTRUCTIONS_IMAGE_PATH)
+    # open instructions page in firefox at the beginning
+    subprocess.Popen(['firefox', instructions_url])
+    # press F11 to make it full screen
+    subprocess.Popen(['xdotool', 'search', '--onlyvisible', '--class', 'firefox', 'windowactivate', '--sync', 'key', 'F11'])
 
     rospy.Subscriber('/mode', Mode, callback=mode_callback, queue_size=1)
     rospy.spin()

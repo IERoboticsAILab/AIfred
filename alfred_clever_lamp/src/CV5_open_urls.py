@@ -6,7 +6,7 @@ import subprocess
 import time
 from tf.transformations import euler_from_quaternion
 from geometry_msgs.msg import PoseStamped
-from alfred_clever_lamp.msg import UrlToOpen
+from alfred_clever_lamp.msg import UrlToOpen, Mode
 
 
 # Global state
@@ -16,6 +16,7 @@ accumulated_rotation = 0
 ROTATION_THRESHOLD = 180
 playlist_index = 0
 videos = []
+mode = None
 
 
 def normalize_angle(angle):
@@ -140,8 +141,8 @@ def pose_callback(msg):
     last_yaw = current_yaw
     
     # Check if we've rotated enough to skip videos
-    if len(videos) < 2:
-        return
+    #if len(videos) < 2:
+    #    return
     
     if accumulated_rotation > ROTATION_THRESHOLD:
         # Clockwise rotation - previous video
@@ -149,6 +150,11 @@ def pose_callback(msg):
         rospy.loginfo(f"Previous video (rotation: {accumulated_rotation:.1f}°): {videos[playlist_index]}")
         accumulated_rotation = 0
         open_url(videos[playlist_index])
+
+        # if mode == 2 (generate image mode), when turn means try another image, so we publish to mode 2 again to trigger CV3 to generate another image and update the URL list
+        if mode == 2:
+            mode_msg.mode = 2
+            mode_pub.publish(mode_msg)
         
     elif accumulated_rotation < -ROTATION_THRESHOLD:
         # Counter-clockwise rotation - next video
@@ -157,13 +163,26 @@ def pose_callback(msg):
         accumulated_rotation = 0
         open_url(videos[playlist_index])
 
+        # if mode == 2 (generate image mode), when turn means try another image, so we publish to mode 2 again to trigger CV3 to generate another image and update the URL list
+        if mode == 2:
+            mode_msg.mode = 2
+            mode_pub.publish(mode_msg)
+
+
+def mode_callback(msg):
+    global mode
+    mode = msg.mode
 
 if __name__ == '__main__':
     try:
         rospy.init_node('chromcast_controller')
         rospy.loginfo("Chromcast controller started")
+
+        mode_pub = rospy.Publisher('/mode', Mode, queue_size=1)
+        mode_msg = Mode()
         
         # Subscribe to pose and URL topics
+        rospy.Subscriber('/mode', Mode, callback=mode_callback, queue_size=1)
         rospy.Subscriber("/natnet_ros/umh_5/pose", PoseStamped, callback=pose_callback, queue_size=1)
         rospy.Subscriber('/urls_to_open', UrlToOpen, callback=urls_callback, queue_size=1)
         

@@ -15,7 +15,7 @@ SHOW_WEBCAM = False
 
 ''' SET UP HANDS MODULE '''
 mp_hands = mp.solutions.hands
-hands = mp_hands.Hands(static_image_mode=False,max_num_hands=2,min_detection_confidence=0.5)
+hands = mp_hands.Hands(static_image_mode=False, max_num_hands=2, min_detection_confidence=0.8, min_tracking_confidence=0.8)
 mp_drawing = mp.solutions.drawing_utils
 
 ''' HELPER FUNCTIONS '''
@@ -91,7 +91,12 @@ def recognize_gestures(image, fingers_statuses, count):
             hands_gestures[hand_label] = "SPIDERMAN SIGN"
         elif count[hand_label] == 5:
             hands_gestures[hand_label] = "HIGH-FIVE SIGN"
-        elif (count[hand_label] == 1 and fingers_statuses[hand_label+'_INDEX']) or (count[hand_label] == 2 and fingers_statuses[hand_label+'_INDEX'] and fingers_statuses[hand_label+'_THUMB']):
+        elif (fingers_statuses[hand_label+'_INDEX']
+            and not fingers_statuses[hand_label+'_MIDDLE']
+            and not fingers_statuses[hand_label+'_RING']
+            and not fingers_statuses[hand_label+'_PINKY']):
+            hands_gestures[hand_label] = "POINTING"
+        elif (count[hand_label] == 1 and fingers_statuses[hand_label+'_INDEX'] and not fingers_statuses[hand_label+'_MIDDLE'] and not fingers_statuses[hand_label+'_RING'] and not fingers_statuses[hand_label+'_PINKY']) or (count[hand_label] == 2 and fingers_statuses[hand_label+'_INDEX'] and fingers_statuses[hand_label+'_THUMB'] and not fingers_statuses[hand_label+'_MIDDLE'] and not fingers_statuses[hand_label+'_RING'] and not fingers_statuses[hand_label+'_PINKY']):
             hands_gestures[hand_label] = "POINTING"
     return output_image, hands_gestures
 
