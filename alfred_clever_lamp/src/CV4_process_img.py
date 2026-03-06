@@ -142,49 +142,30 @@ PROMPT: [Single optimized generation instruction only]
 """
 PROMPT_DRAW_MODE = """
 You are AIfred, an art mentor AI embedded in a smart lamp observing what a student wants to draw.
-
 The student is pointing at a subject they want to learn how to draw.
 
 YOUR GOAL:
 Generate 3 simple, high-quality YouTube search queries that will reliably return excellent step-by-step drawing tutorials for this exact subject.
 
 ANALYZE THE IMAGE FOR:
-
 The exact subject (be precise)
 
-The drawing style (realistic, anime, cartoon, fine art, etc.)
-
-The medium if visible (pencil, charcoal, digital, ink, etc.)
-
 QUERY DESIGN PRINCIPLES:
-
 Keep queries simple and natural (what a real person would type)
-
 Include “how to draw” or “drawing tutorial”
-
-Add one quality filter like “step by step,” “full process,” or “detailed tutorial”
-
 Avoid complex or overly academic wording
-
-Avoid beginner-only phrasing like “for kids” unless clearly appropriate
-
 Make sure the queries are specific enough to return the exact subject
 
 OUTPUT FORMAT — exactly this structure:
 QUERY_1: [Simple, precise YouTube search query]
-QUERY_2: [Same subject with slightly different wording + “step by step” or “full process”]
-QUERY_3: [Technique-focused version including style or medium]
+QUERY_2: [query to learn how to draw the subjecte]
+QUERY_3: [another query to learn how to draw the subject]
 
 RULES:
-
 Only output the 3 QUERY lines
-
 No markdown
-
 No explanations
-
 No extra text
-
 Keep each query clean, clear, and YouTube-optimized
 
 Your goal is to produce searches that will almost certainly return a strong, relevant tutorial the student can immediately follow.
@@ -461,6 +442,8 @@ def generate_img(prompt, input_image):
     URL = f"https://generativelanguage.googleapis.com/v1beta/models/{GEMINI_GENERATE_IMG_MODEL}:generateContent"
     OUT_PNG = Path(OUTPUT_GENERATED_IMG_PATH)
     input_image = Path(input_image)
+    # tune prompt> specify to render it as a full screen image, without the real life elements such as hand user and table
+    prompt += " Render the image as a clean, professional-quality version of the same subject, without any hand, table, or real-life elements. Keep the composition and proportions, but improve the quality, clarity, and execution to be like a polished studio photo of the subject on a plain background."
 
     img_b64 = base64.b64encode(input_image.read_bytes()).decode("utf-8")
     payload = {
