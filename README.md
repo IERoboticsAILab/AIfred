@@ -10,9 +10,9 @@
 
 <p align="center">
   📺 <b>Watch the full demo on YouTube:</b><br>
-  <a href="https://www.youtube.com/watch?v=YOUR_VIDEO_ID">
-    <img src="https://img.youtube.com/vi/YOUR_VIDEO_ID/0.jpg" alt="AIfred YouTube Video" width="400"/><br>
-    https://www.youtube.com/watch?v=YOUR_VIDEO_ID
+  <a href="https://www.youtube.com/watch?v=L3PLWqSPDGM">
+    <img src="https://img.youtube.com/vi/L3PLWqSPDGM/0.jpg" alt="YouTube Demo Video" width="400"/><br>
+    https://www.youtube.com/watch?v=L3PLWqSPDGM
   </a>
 </p>
 
@@ -29,20 +29,13 @@ The objective of the project is to have a friend and tool at the disposal of the
 
 <br>
 
-The agent now has 6 intelligent modes:
+The agent has 3 intelligent modes:
 
-- MATH - Step-by-step solutions with clear explanations
+- HOMEWORK - Project examples, wisdome pills, and explanations to help you with your homework, and learning process.
 
-- CODE - Code explanations with key concepts and examples
+- GENERATE IMAGE - Render sketches, diagrams, or hand drawings from phisical space to digital space, and project them on the table.
 
-- DRAWING - YouTube tutorials for artistic creation
-
-- YOUTUBE_TUTORIAL - How-to videos for practical skills
-
-- YOUTUBE_INFO - Educational videos about concepts
-
-- CUSTOM_PAGE - Quick reference info on one screen
-
+- DRAW - Draw on paper with the robot arm projecting alligned youtube videos to improve your drawing skills.
 
 ## Before running the code
 
@@ -106,6 +99,13 @@ uv sync
 
 #### Run demo
 
+```
+roslaunch alfred_clever_lamp demo.launch
+```
+
+##### Step by step instructions
+The launch file will execute all the necessary nodes to have the full demo running, but if you want to run it step by step, here you have the instructions:
+
 1. Publishing messages from Optitrack to ros:
 
     ```
@@ -153,13 +153,15 @@ uv sync
 
 ### Usage
 
+![AIfred Instructions](Videos_and_pictures/0_instructions.png)
+
 1. Move the Universal Marker and the robot will follow pointing the projector content on the table.
 
 4. Point on the workspace with your finger to trigger the screenshot, that will pass to Gemini API, and generate Personalize Content for you. Then it will be projected on the table.
 
-2. Lift the Marker to pause the YouTube video.
-
 3. Rotate the marker to show next/previous YouTube video.
+
+4. Lift TUI to go to the next mode
 
 ## Resources
 
@@ -167,17 +169,3 @@ uv sync
 - [kodak manual pdf](demos/kodak_manual.pdf)
 - [natnet_ros_cpp](https://github.com/L2S-lab/natnet_ros_cpp) ROS package
 - [interbotics_ws](https://docs.trossenrobotics.com/interbotix_xsarms_docs/ros_interface/ros1/software_setup.html) ROS package
-
-## Demo
-
-Combine the 2 parts of the project and this is what you will have:
-
-Demo example: lets say we are looking at giraffes and we are curious to know more about it, we can trigger the computer vision to tell us what it sees, and send us a YouTube video about it. Then we can manipulate the position of the projector and projct on a specific area of the table. Using chorome cast attached to the projector we have one more screen to improve our working quality.
-
-<div align="center">
-  <img src="https://github.com/IERoboticsAILab/clever_lamp/blob/main/Videos_and_pictures/demo1.gif" alt="real space result" width="550">
-</div>
-
-<div align="center">
-  <img src="https://github.com/IERoboticsAILab/clever_lamp/blob/main/Videos_and_pictures/demo1RViz.gif" alt="RViz result" width="550">
-</div>
