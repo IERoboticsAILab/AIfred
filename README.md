@@ -1,7 +1,7 @@
 <h1 align="center">🤖 AIfred – Your Clever Robotic Study Companion</h1>
 
 <p align="center">
-  <img src="https://github.com/IERoboticsAILab/clever_lamp/blob/main/Videos_and_pictures/diagram.png" alt="AIfred System Diagram" width="600"/>
+  <img src="Videos_and_pictures/diagram.png" alt="AIfred System Diagram" width="600"/>
 </p>
 
 <p align="center">
