@@ -41,7 +41,7 @@ OUTPUT_GENERATED_IMG_PATH = "/home/gringo/catkin_ws/src/AIfred_clever_lamp/Video
 ''' SETUP GEMINI API '''
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(__file__), ".env"))
 GEMINI_API = os.environ.get("GEMINI_API_KEY")
-GEMINI_MODEL = "gemini-2.0-flash"
+GEMINI_MODEL = "gemini-2.5-flash"
 GEMINI_GENERATE_IMG_MODEL = "gemini-2.5-flash-image" #"gemini-3-pro-image-preview" #"gemini-2.5-flash-image" #"gemini-2.5-flash-image-preview-05-20" #"gemini-2.5-flash-image-preview"
 
 
