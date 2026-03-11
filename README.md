@@ -8,6 +8,14 @@
   AIfred is an interactive robotic lamp designed to enhance your learning experience. It responds to hand gestures, retrieves real-time information, and seamlessly blends digital and physical spaces using computer vision and AI. Built with ROS, Mediapipe, and Gemini API, it turns study time into an intuitive and focused conversation.
 </p>
 
+<br>
+
+<br>
+
+<br>
+
+<br>
+
 <p align="center">
   📺 <b>Watch the full demo on YouTube:</b><br>
   <a href="https://www.youtube.com/watch?v=L3PLWqSPDGM">
@@ -70,7 +78,7 @@ To run the code you will need some prerequisites:
 
 #### Install software
 
-1. Create a Gemini API and YouTube API and put them in a `.env` file
+1. Create a Gemini API and it them in a `.env` file
 
 2. Download [natnet_ros_cpp](https://github.com/L2S-lab/natnet_ros_cpp) ROS package
 
@@ -85,9 +93,9 @@ To run the code you will need some prerequisites:
     catkin build  #OR catkin_make
     . devel/setup.bash
     ```
-5. Open chrome (better account with youtube premium) tab (will be used for casting YouTube videos)
+5. Open chrome (better account with youtube premium) tab (will be used for casting generated content)
 
-6. Open FireFox tab (will be used for wikipedia articles)
+6. Open FireFox tab (will be used for showiung user instructions)
 
 7. Cast the tab of chrome with chromcast that is on the robot arm end effector Kodak Projector
 
@@ -152,7 +160,7 @@ The launch file will execute all the necessary nodes to have the full demo runni
 
 4. Point on the workspace with your finger to trigger the screenshot, that will pass to Gemini API, and generate Personalize Content for you. Then it will be projected on the table.
 
-3. Rotate the marker to show next/previous YouTube video.
+3. Rotate the marker to show next/previous.
 
 4. Lift TUI to go to the next mode
 
