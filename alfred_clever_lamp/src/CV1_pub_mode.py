@@ -30,5 +30,5 @@ if __name__ == '__main__':
     rospy.loginfo(f"Initial mode: {current_mode}")
     mode_pub.publish(mode_msg)
 
-    rospy.Subscriber("/natnet_ros/umh_5/pose", PoseStamped, callback=pose_callback, queue_size=1)
+    rospy.Subscriber("/natnet_ros/umh_0/pose", PoseStamped, callback=pose_callback, queue_size=1)
     rospy.spin()

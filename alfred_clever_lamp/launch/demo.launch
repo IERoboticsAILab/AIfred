@@ -49,7 +49,7 @@
   <arg name="log_latencies" default="false"/>
 
   <arg name="serverIP" default="10.205.3.3"/>
-  <arg name="clientIP" default="10.205.3.150"/>
+  <arg name="clientIP" default="10.205.3.217"/>
   <arg name="serverType" default="unicast"/>
   <arg name="multicastAddress" default="239.255.42.99"/>
   <arg name="serverCommandPort" default="1510"/>

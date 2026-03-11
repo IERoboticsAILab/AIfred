@@ -183,7 +183,7 @@ if __name__ == '__main__':
         
         # Subscribe to pose and URL topics
         rospy.Subscriber('/mode', Mode, callback=mode_callback, queue_size=1)
-        rospy.Subscriber("/natnet_ros/umh_5/pose", PoseStamped, callback=pose_callback, queue_size=1)
+        rospy.Subscriber("/natnet_ros/umh_0/pose", PoseStamped, callback=pose_callback, queue_size=1)
         rospy.Subscriber('/urls_to_open', UrlToOpen, callback=urls_callback, queue_size=1)
         
         rospy.spin()
