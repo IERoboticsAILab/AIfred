@@ -30,8 +30,8 @@ def out_boundary(x, y):
 
 
 if __name__ == '__main__':
-    x_offset = 0.25
-    y_offset = 0.0
+    x_offset = 0.22
+    y_offset = 0.08
     rospy.init_node('move_robot')
 
     tfBuffer = tf2_ros.Buffer()
