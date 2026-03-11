@@ -55,7 +55,7 @@ To run the code you will need some prerequisites:
 
 1. Setup:
     <div align="center">
-    <img src="https://github.com/IERoboticsAILab/clever_lamp/blob/main/Videos_and_pictures/station_setup.png" alt="station setup" width="750">
+    <img src="Videos_and_pictures/station_setup.png" alt="station setup" width="750">
     </div>
 2. Take Trossenrobotics wx250s, and secure it on table. Connect it to his power supply and connect signal USB to the computer.
 3. Mount Kodak Projector on the end-effector of the Trossenrobotics Robot arm (wx250s) (download [this](https://github.com/IERoboticsAILab/3d_printing_designs/blob/main/files/WX-250_robot_garden/support_projector_wx250s.stl) for the attachment).
@@ -117,7 +117,7 @@ The launch file will execute all the necessary nodes to have the full demo runni
     ```
 
     <div align="center">
-    <img src="https://github.com/IERoboticsAILab/clever_lamp/blob/main/Videos_and_pictures/natnet_setup.png" alt="natnet setup" width="550">
+    <img src="Videos_and_pictures/natnet_setup.png" alt="natnet setup" width="550">
     </div>
 
     - Check that the topics have been published using:
@@ -134,21 +134,14 @@ The launch file will execute all the necessary nodes to have the full demo runni
     roslaunch interbotix_xsarm_control xsarm_control.launch robot_model:=wx250s
     ```
 
-3. Make robot follow and point on the marker. Launch [clever_lamp.launch](https://github.com/IERoboticsAILab/clever_lamp/blob/main/Alfred_clever_lamp/launch/clever_lamp.launch) that will execute both nodes [brodcast_marker.py](https://github.com/IERoboticsAILab/clever_lamp/blob/main/Alfred_clever_lamp/src/brodcast_marker.py) and [clever_lamp.py](https://github.com/IERoboticsAILab/clever_lamp/blob/main/Alfred_clever_lamp/src/clever_lamp.py):
-    ```
-    roslaunch alfred_clever_lamp clever_lamp.launch
-    ```
+3. Make robot follow and point on the marker.
 
-    a. `brodcast_marker.py`: This section of the project combine digital space wit real word with a user frendly interface. In RViz the robot is set in (0,0,0) that is the word cordinate space. But in the reality the robot is in a diffrent position in space (it depends where you position the working table). Here we take the Optitrack cordinates of the real robot base (`/natnet_ros/real_base_wx250s/pose`) in relation with the real marker (`/natnet_ros/umh_2/pose`), and we transform that relation with the digital robot base (`wx250s/base_link`), publishing a new tf for the marker (`umh_2_new`)
+    a. `brodcast marker`: This section of the project combine digital space wit real word with a user frendly interface. In RViz the robot is set in (0,0,0) that is the word cordinate space. But in the reality the robot is in a diffrent position in space (it depends where you position the working table). Here we take the Optitrack cordinates of the real robot base (`/natnet_ros/real_base_wx250s/pose`) in relation with the real marker (`/natnet_ros/umh_2/pose`), and we transform that relation with the digital robot base (`wx250s/base_link`), publishing a new tf for the marker (`umh_2_new`)
 
-    b. `clever_lamp.py`: Look at the tf transformation of the universal marker position relative to the digital space and move end effector accordingly.
+    b. `clever lamp`: Look at the tf transformation of the universal marker position relative to the digital space and move end effector accordingly.
 
 4. Run the computer vision ROS Node:
-    ```
-    rosrun alfred_clever_lamp computer_vision.py
-    ```
-
-    a. `computer_vision.py`: Look at the webcam, detect using mediapipe if you are pointing at something with your finger, take screenshot and shows YouTube video and Wikipedia of what you are looking at. If it detect some math, it solve it step by tep with you, projecting on the paper the solution. To run this script you will need to create a virtual environment with all the dependencies and activate it when launching the alfred node (point at things → webcam → gemini → video casted).
+    a. `computer vision`: Look at the webcam, detect using mediapipe if you are pointing at something with your finger, take screenshot and shows YouTube video and Wikipedia of what you are looking at. If it detect some math, it solve it step by tep with you, projecting on the paper the solution. To run this script you will need to create a virtual environment with all the dependencies and activate it when launching the alfred node (point at things → webcam → gemini → video casted).
 
 
 ### Usage
