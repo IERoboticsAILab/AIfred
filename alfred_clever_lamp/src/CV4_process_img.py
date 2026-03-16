@@ -72,9 +72,9 @@ By the final page, the student should feel illuminated and ready to finish indep
 RESPONSE FORMAT — use exactly this structure, one field per line:
 TITLE: [Short concept-centered title]
 PAGE_1: [What kind of problem this is + the key idea in one tight explanation + 1 guiding question]
-PAGE_2: [Simple example or analogy that reveals the pattern]
+PAGE_2: [Simple example or analogy that reveals the pattern. Give me all the formulas needed to solve the problem. (e.g. It is a quadratic equation -> give me the formula of a general quadrtic equation and the one to solve the equation)]
 PAGE_3: [Direct connection to the student's specific problem + one action they can try now]
-INSIGHT: [A concise reframing or mental model that makes the structure of the problem click]
+INSIGHT: [Give generic formulas and concepts that will help with the problem. A concise reframing or mental model that makes the structure of the problem click]
 NEXT_STEP: [A clear instruction for what they should now attempt on their own]
 
 RULES:
@@ -149,7 +149,7 @@ Avoid complex or overly academic wording
 Make sure the queries are specific enough to return the exact subject
 
 OUTPUT FORMAT — exactly this structure:
-QUERY_1: [Simple, precise YouTube search query]
+QUERY_1: [precise YouTube search query: "how to draw ... advance"]
 QUERY_2: [query to learn how to draw the subjecte]
 QUERY_3: [another query to learn how to draw the subject]
 
