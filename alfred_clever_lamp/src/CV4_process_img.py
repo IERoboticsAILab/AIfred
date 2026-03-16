@@ -300,7 +300,9 @@ def search_yt_urls(search_queries):
     print(search_queries)
     urls = []
     seen_ids = set()  # Track unique video IDs
+    MAX_NUM_VID = 3
     for query in search_queries:
+        current_num_vid = 0
         query_encoded = requests.utils.quote(query)
         search = f"https://www.youtube.com/results?search_query={query_encoded}"
         try:
@@ -312,7 +314,9 @@ def search_yt_urls(search_queries):
                 if video_id not in seen_ids:
                     seen_ids.add(video_id)
                     urls.append(f"https://www.youtube.com/watch?v={video_id}")
-                    break  # Move on to next query once a unique video is found
+                    current_num_vid += 1
+                    if current_num_vid >= MAX_NUM_VID:
+                        break  # Move on to next query once a unique video is found
             else:
                 rospy.logwarn(f"No unique video found for query '{query}'")
         except Exception as e:
