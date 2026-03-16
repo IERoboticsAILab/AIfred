@@ -133,34 +133,35 @@ OUTPUT FORMAT (STRICT):
 PROMPT: [Single optimized generation instruction only]
 """
 PROMPT_DRAW_MODE = """
-You are AIfred, an art mentor AI embedded in a smart lamp observing what a student wants to draw.
+You are AIfred, an advanced art mentor AI embedded in a smart lamp observing what a student wants to draw.
 The student is pointing at a subject they want to learn how to draw.
 
 YOUR GOAL:
-Generate 3 simple, high-quality YouTube search queries that will reliably return excellent step-by-step drawing tutorials for this exact subject.
+Generate 3 YouTube search queries that return impressive, satisfying drawing tutorials — NOT basic beginner content.
+The results should feel rewarding and produce a drawing the student will be proud of.
 
 ANALYZE THE IMAGE FOR:
-The exact subject (be precise)
+The exact subject (be precise — species, style, pose if visible)
 
 QUERY DESIGN PRINCIPLES:
-Keep queries simple and natural (what a real person would type)
-Include “how to draw” or “drawing tutorial”
-Avoid complex or overly academic wording
-Make sure the queries are specific enough to return the exact subject
+- Target intermediate-to-advanced tutorials (realistic, detailed, or stylized — NOT "easy" or "simple")
+- Use style keywords like: realistic, detailed, professional, satisfying, pencil sketch, ink, charcoal, semi-realistic
+- Avoid words like: easy, simple, cute, kids, beginner, cartoon (unless the subject is inherently cartoon-style)
+- Include the medium when relevant (pencil, ink, digital)
+- Think: what would an art student or hobbyist search for?
 
 OUTPUT FORMAT — exactly this structure:
-QUERY_1: [precise YouTube search query: "how to draw ... advance"]
-QUERY_2: [query to learn how to draw the subjecte]
-QUERY_3: [another query to learn how to draw the subject]
+QUERY_1: [search query]
+QUERY_2: [search query]
+QUERY_3: [search query]
 
 RULES:
 Only output the 3 QUERY lines
 No markdown
 No explanations
 No extra text
-Keep each query clean, clear, and YouTube-optimized
 
-Your goal is to produce searches that will almost certainly return a strong, relevant tutorial the student can immediately follow.
+Your goal is to find tutorials that are visually impressive and satisfying to follow and makes user learn a new amazing drawing skill.
 """
 
 
@@ -296,17 +297,24 @@ def parse_generate_image_response(response: str):
     return prompt
 
 def search_yt_urls(search_queries):
+    print(search_queries)
     urls = []
+    seen_ids = set()  # Track unique video IDs
     for query in search_queries:
         query_encoded = requests.utils.quote(query)
         search = f"https://www.youtube.com/results?search_query={query_encoded}"
-        # chose a video from the search results (for simplicity, we take the first video link)
         try:
             r = requests.get(search, timeout=10)
             r.raise_for_status()
             video_ids = re.findall(r"watch\?v=(\S{11})", r.text)
-            if video_ids:
-                urls.append(f"https://www.youtube.com/watch?v={video_ids[0]}")
+            # Pick the first video ID that hasn't been seen yet
+            for video_id in video_ids:
+                if video_id not in seen_ids:
+                    seen_ids.add(video_id)
+                    urls.append(f"https://www.youtube.com/watch?v={video_id}")
+                    break  # Move on to next query once a unique video is found
+            else:
+                rospy.logwarn(f"No unique video found for query '{query}'")
         except Exception as e:
             rospy.logerr(f"Error searching YouTube for query '{query}': {str(e)}")
     return urls

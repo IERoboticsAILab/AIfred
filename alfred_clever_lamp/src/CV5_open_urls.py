@@ -59,8 +59,8 @@ def open_url(url):
                  'windowactivate', '--sync'], delay=0.2)
     
     # Exit YouTube fullscreen if active (press 'f')
-    run_xdotool(['search', '--onlyvisible', '--class', 'chrome', 
-                 'windowactivate', '--sync', 'key', 'f'], delay=0.2)
+    #run_xdotool(['search', '--onlyvisible', '--class', 'chrome', 
+    #             'windowactivate', '--sync', 'key', 'f'], delay=0.2)
     
     # Exit browser fullscreen (F11)
     #run_xdotool(['search', '--onlyvisible', '--class', 'chrome', 
@@ -90,8 +90,8 @@ def open_url(url):
     # Enter YouTube fullscreen (press 'f')
     # Wait longer for page to load
     #time.sleep(1.5)
-    run_xdotool(['search', '--onlyvisible', '--class', 'chrome', 
-                 'windowactivate', '--sync', 'key', 'f'], delay=0.2)
+    #run_xdotool(['search', '--onlyvisible', '--class', 'chrome', 
+    #             'windowactivate', '--sync', 'key', 'f'], delay=0.2)
     
     # open existing firefox tab
     run_xdotool(['search', '--onlyvisible', '--class', 'firefox', 
