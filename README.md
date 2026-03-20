@@ -1,18 +1,26 @@
 <h1 align="center">🤖 AIfred – Your Clever Robotic Study Companion</h1>
 
 <p align="center">
-  <img src="https://github.com/IERoboticsAILab/clever_lamp/blob/main/Videos_and_pictures/diagram.png" alt="AIfred System Diagram" width="600"/>
+  <img src="Videos_and_pictures/diagram.png" alt="AIfred System Diagram" width="600"/>
 </p>
 
 <p align="center">
   AIfred is an interactive robotic lamp designed to enhance your learning experience. It responds to hand gestures, retrieves real-time information, and seamlessly blends digital and physical spaces using computer vision and AI. Built with ROS, Mediapipe, and Gemini API, it turns study time into an intuitive and focused conversation.
 </p>
 
+<br>
+
+<br>
+
+<br>
+
+<br>
+
 <p align="center">
   📺 <b>Watch the full demo on YouTube:</b><br>
-  <a href="https://www.youtube.com/watch?v=YOUR_VIDEO_ID">
-    <img src="https://img.youtube.com/vi/YOUR_VIDEO_ID/0.jpg" alt="AIfred YouTube Video" width="400"/><br>
-    https://www.youtube.com/watch?v=YOUR_VIDEO_ID
+  <a href="https://www.youtube.com/watch?v=L3PLWqSPDGM">
+    <img src="https://img.youtube.com/vi/L3PLWqSPDGM/0.jpg" alt="YouTube Demo Video" width="400"/><br>
+    https://www.youtube.com/watch?v=L3PLWqSPDGM
   </a>
 </p>
 
@@ -26,6 +34,16 @@ The robotic arm's precise movements allow the projector to illuminate and transf
 By integrating cutting-edge robotics with user-centric design, the Clever Lamp offers immense potential for creative and practical applications, making it an indispensable addition to modern living spaces.
 
 The objective of the project is to have a friend and tool at the disposal of the user. With a simple webcam, AIfred can detect what is appening on the user workspace and provide with usefull insights such as YouTube videos and Wikypedia links. Moreover, AIfred will be able to see your workspace intercat with you with voice (speech-to-speech) and solve on paper math for you.
+
+<br>
+
+The agent has 3 intelligent modes:
+
+- HOMEWORK - Project examples, wisdome pills, and explanations to help you with your homework, and learning process.
+
+- GENERATE IMAGE - Render sketches, diagrams, or hand drawings from phisical space to digital space, and project them on the table.
+
+- DRAW - Draw on paper with the robot arm projecting alligned youtube videos to improve your drawing skills.
 
 ## Before running the code
 
@@ -45,7 +63,7 @@ To run the code you will need some prerequisites:
 
 1. Setup:
     <div align="center">
-    <img src="https://github.com/IERoboticsAILab/clever_lamp/blob/main/Videos_and_pictures/station_setup.png" alt="station setup" width="750">
+    <img src="Videos_and_pictures/station_setup.png" alt="station setup" width="750">
     </div>
 2. Take Trossenrobotics wx250s, and secure it on table. Connect it to his power supply and connect signal USB to the computer.
 3. Mount Kodak Projector on the end-effector of the Trossenrobotics Robot arm (wx250s) (download [this](https://github.com/IERoboticsAILab/3d_printing_designs/blob/main/files/WX-250_robot_garden/support_projector_wx250s.stl) for the attachment).
@@ -60,7 +78,7 @@ To run the code you will need some prerequisites:
 
 #### Install software
 
-1. Create a Gemini API and YouTube API and put them in a `.env` file
+1. Create a Gemini API and it them in a `.env` file
 
 2. Download [natnet_ros_cpp](https://github.com/L2S-lab/natnet_ros_cpp) ROS package
 
@@ -75,51 +93,39 @@ To run the code you will need some prerequisites:
     catkin build  #OR catkin_make
     . devel/setup.bash
     ```
-5. Open chrome (better account with youtube premium) tab (will be used for casting YouTube videos)
+5. Open chrome (better account with youtube premium) tab (will be used for casting generated content)
 
-6. Open FireFox tab (will be used for wikipedia articles)
+6. Open FireFox tab (will be used for showiung user instructions)
 
 7. Cast the tab of chrome with chromcast that is on the robot arm end effector Kodak Projector
 
-8. Create virtual environment and download all the dependencies for computer vision
-<details>
-  <summary><strong>Dependencies</strong></summary>
+8. Create virtual environment and download all the dependencies for computer vision 
 
-    ```python
-    ''' IMPORT MODULES '''
-    import sys
-    import os
-    import cv2
-    import re
-    from PIL import Image as PIL_Image
-    import google.generativeai as genai
-    import mediapipe as mp
-    from dotenv import load_dotenv
-    sys.path.append(os.path.join(os.path.dirname(__file__), '../scripts'))
-    from my_functions import countFingers, detectHandsLandmarks, search_yt, circular_list, open_url, format_math
-    import webbrowser
-    import googleapiclient.discovery
-    import rospy
-    from tf.transformations import euler_from_quaternion
-    import geometry_msgs.msg
-    from geometry_msgs.msg import PoseStamped
-    import math
-    import subprocess
-    import pyautogui
-    import time
-    ```
-</details>
+```bash
+uv sync
+```
 
 #### Run demo
+
+```
+roslaunch alfred_clever_lamp demo.launch
+```
+
+##### Step by step instructions
+The launch file will execute all the necessary nodes to have the full demo running, but if you want to run it step by step, here you have the instructions:
 
 1. Publishing messages from Optitrack to ros:
 
     ```
     roslaunch natnet_ros_cpp gui_natnet_ros.launch
     ```
+    OR
+    ```
+    roslaunch natnet_ros_cpp natnet_ros.launch serverIP:=10.205.3.3 clientIP:=10.205.3.150 pub_rigid_body:=true pub_rigid_body_marker:=true serverType:=unicast
+    ```
 
     <div align="center">
-    <img src="https://github.com/IERoboticsAILab/clever_lamp/blob/main/Videos_and_pictures/natnet_setup.png" alt="natnet setup" width="550">
+    <img src="Videos_and_pictures/natnet_setup.png" alt="natnet setup" width="550">
     </div>
 
     - Check that the topics have been published using:
@@ -136,32 +142,27 @@ To run the code you will need some prerequisites:
     roslaunch interbotix_xsarm_control xsarm_control.launch robot_model:=wx250s
     ```
 
-3. Make robot follow and point on the marker. Launch [clever_lamp.launch](https://github.com/IERoboticsAILab/clever_lamp/blob/main/Alfred_clever_lamp/launch/clever_lamp.launch) that will execute both nodes [brodcast_marker.py](https://github.com/IERoboticsAILab/clever_lamp/blob/main/Alfred_clever_lamp/src/brodcast_marker.py) and [clever_lamp.py](https://github.com/IERoboticsAILab/clever_lamp/blob/main/Alfred_clever_lamp/src/clever_lamp.py):
-    ```
-    roslaunch alfred_clever_lamp clever_lamp.launch
-    ```
+3. Make robot follow and point on the marker.
 
-    a. `brodcast_marker.py`: This section of the project combine digital space wit real word with a user frendly interface. In RViz the robot is set in (0,0,0) that is the word cordinate space. But in the reality the robot is in a diffrent position in space (it depends where you position the working table). Here we take the Optitrack cordinates of the real robot base (`/natnet_ros/real_base_wx250s/pose`) in relation with the real marker (`/natnet_ros/umh_2/pose`), and we transform that relation with the digital robot base (`wx250s/base_link`), publishing a new tf for the marker (`umh_2_new`)
+    a. `brodcast marker`: This section of the project combine digital space wit real word with a user frendly interface. In RViz the robot is set in (0,0,0) that is the word cordinate space. But in the reality the robot is in a diffrent position in space (it depends where you position the working table). Here we take the Optitrack cordinates of the real robot base (`/natnet_ros/real_base_wx250s/pose`) in relation with the real marker (`/natnet_ros/umh_2/pose`), and we transform that relation with the digital robot base (`wx250s/base_link`), publishing a new tf for the marker (`umh_2_new`)
 
-    b. `clever_lamp.py`: Look at the tf transformation of the universal marker position relative to the digital space and move end effector accordingly.
+    b. `clever lamp`: Look at the tf transformation of the universal marker position relative to the digital space and move end effector accordingly.
 
 4. Run the computer vision ROS Node:
-    ```
-    rosrun alfred_clever_lamp computer_vision.py
-    ```
-
-    a. `computer_vision.py`: Look at the webcam, detect using mediapipe if you are pointing at something with your finger, take screenshot and shows YouTube video and Wikipedia of what you are looking at. If it detect some math, it solve it step by tep with you, projecting on the paper the solution. To run this script you will need to create a virtual environment with all the dependencies and activate it when launching the alfred node (point at things → webcam → gemini → video casted).
+    a. `computer vision`: Look at the webcam, detect using mediapipe if you are pointing at something with your finger, take screenshot and shows YouTube video and Wikipedia of what you are looking at. If it detect some math, it solve it step by tep with you, projecting on the paper the solution. To run this script you will need to create a virtual environment with all the dependencies and activate it when launching the alfred node (point at things → webcam → gemini → video casted).
 
 
 ### Usage
+
+![AIfred Instructions](Videos_and_pictures/0_instructions.png)
 
 1. Move the Universal Marker and the robot will follow pointing the projector content on the table.
 
 4. Point on the workspace with your finger to trigger the screenshot, that will pass to Gemini API, and generate Personalize Content for you. Then it will be projected on the table.
 
-2. Lift the Marker to pause the YouTube video.
+3. Rotate the marker to show next/previous.
 
-3. Rotate the marker to show next/previous YouTube video.
+4. Lift TUI to go to the next mode
 
 ## Resources
 
@@ -169,17 +170,3 @@ To run the code you will need some prerequisites:
 - [kodak manual pdf](demos/kodak_manual.pdf)
 - [natnet_ros_cpp](https://github.com/L2S-lab/natnet_ros_cpp) ROS package
 - [interbotics_ws](https://docs.trossenrobotics.com/interbotix_xsarms_docs/ros_interface/ros1/software_setup.html) ROS package
-
-## Demo
-
-Combine the 2 parts of the project and this is what you will have:
-
-Demo example: lets say we are looking at giraffes and we are curious to know more about it, we can trigger the computer vision to tell us what it sees, and send us a YouTube video about it. Then we can manipulate the position of the projector and projct on a specific area of the table. Using chorome cast attached to the projector we have one more screen to improve our working quality.
-
-<div align="center">
-  <img src="https://github.com/IERoboticsAILab/clever_lamp/blob/main/Videos_and_pictures/demo1.gif" alt="real space result" width="550">
-</div>
-
-<div align="center">
-  <img src="https://github.com/IERoboticsAILab/clever_lamp/blob/main/Videos_and_pictures/demo1RViz.gif" alt="RViz result" width="550">
-</div>
