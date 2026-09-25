@@ -95,14 +95,13 @@ To run the code you will need some prerequisites:
 4. Download AIfred ROS Package:
 
     ```
-    cd ~/catkin_ws/src
+    cd /home/demo/catkin_ws/src
     git clone https://github.com/IERoboticsAILab/AIfred.git
     cd ..
     catkin build  #OR catkin_make
     . devel/setup.bash
     ```
-
-1. Create a Gemini API and save it in a `.env` file: in `~/catkin_ws/src/AIfred_clever_lamp/alfred_clever_lamp/src` add `GEMINI_API_KEY=YOUR_GEMINI_API_KEY` to the `.env` file.
+1. Create a Gemini API and save it in a `.env` file: in `~/catkin_ws/src/AIfred/alfred_clever_lamp/src` add `GEMINI_API_KEY=YOUR_GEMINI_API_KEY` to the `.env` file.
 
 5. Open chrome tab (will be used for casting generated content)
 
@@ -115,10 +114,21 @@ To run the code you will need some prerequisites:
 ```bash
 uv sync
 sudo apt install xdotool
-source catkin_ws/src/AIfred_clever_lamp/.venv/bin/activate
+source catkin_ws/src/AIfred/.venv/bin/activate
 ```
 
 #### Run demo
+make sure to change the absolute paths of of the images to `/home/<your_demo>`
+
+
+```
+echo "$CMAKE_PREFIX_PATH"
+/home/demo/catkin_ws/devel:/home/demo/interbotix_ws/devel:/opt/ros/noetic
+```
+
+```
+roslaunch alfred_clever_lamp demo.launch use_rviz:=true use_sim:=true clientIP:=<your_ip>
+```
 
 ```
 roslaunch alfred_clever_lamp demo.launch
@@ -134,7 +144,7 @@ The launch file will execute all the necessary nodes to have the full demo runni
     ```
     OR
     ```
-    roslaunch natnet_ros_cpp natnet_ros.launch serverIP:=10.205.3.3 clientIP:=10.205.3.150 pub_rigid_body:=true pub_rigid_body_marker:=true serverType:=unicast
+    roslaunch natnet_ros_cpp natnet_ros.launch serverIP:=<optitrack_ip> clientIP:=<your_ip> pub_rigid_body:=true pub_rigid_body_marker:=true serverType:=unicast
     ```
 
     <div align="center">

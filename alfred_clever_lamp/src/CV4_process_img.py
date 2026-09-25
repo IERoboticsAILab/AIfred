@@ -33,9 +33,9 @@ os.makedirs(SERVE_DIR, exist_ok=True)
 
 
 ''' IMAGE PATHS '''
-ALLIGN_PAPER_IMAGE_PATH = "/home/gringo/catkin_ws/src/AIfred_clever_lamp/Videos_and_pictures/3_1_draw.png"
-THINKING_IMAGE_PATH = "/home/gringo/catkin_ws/src/AIfred_clever_lamp/Videos_and_pictures/0_thinking.png"
-OUTPUT_GENERATED_IMG_PATH = "/home/gringo/catkin_ws/src/AIfred_clever_lamp/Videos_and_pictures/generated_image.png"
+ALLIGN_PAPER_IMAGE_PATH = "/home/demo/catkin_ws/src/AIfred/Videos_and_pictures/3_1_draw.png"
+THINKING_IMAGE_PATH = "/home/demo/catkin_ws/src/AIfred/Videos_and_pictures/0_thinking.png"
+OUTPUT_GENERATED_IMG_PATH = "/home/demo/catkin_ws/src/AIfred/Videos_and_pictures/generated_image.png"
 
 
 ''' SETUP GEMINI API '''

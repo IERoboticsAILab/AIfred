@@ -12,11 +12,11 @@ import subprocess
 
 
 ''' IMAGE PATHS '''
-ARM_CONTROL_IMAGE_PATH = "/home/gringo/catkin_ws/src/AIfred_clever_lamp/Videos_and_pictures/0_arm_control.png"
-HOMEWORK_MODE_IMAGE_PATH = "/home/gringo/catkin_ws/src/AIfred_clever_lamp/Videos_and_pictures/1_homework.png"
-GENERATE_IMAGE_MODE_IMAGE_PATH = "/home/gringo/catkin_ws/src/AIfred_clever_lamp/Videos_and_pictures/2_generate_image.png"
-DRAW_MODE_IMAGE_PATH = "/home/gringo/catkin_ws/src/AIfred_clever_lamp/Videos_and_pictures/3_draw.png"
-INSTRUCTIONS_IMAGE_PATH = "/home/gringo/catkin_ws/src/AIfred_clever_lamp/Videos_and_pictures/0_instructions.png"
+ARM_CONTROL_IMAGE_PATH = "/home/demo/catkin_ws/src/AIfred/Videos_and_pictures/0_arm_control.png"
+HOMEWORK_MODE_IMAGE_PATH = "/home/demo/catkin_ws/src/AIfred/Videos_and_pictures/1_homework.png"
+GENERATE_IMAGE_MODE_IMAGE_PATH = "/home/demo/catkin_ws/src/AIfred/Videos_and_pictures/2_generate_image.png"
+DRAW_MODE_IMAGE_PATH = "/home/demo/catkin_ws/src/AIfred/Videos_and_pictures/3_draw.png"
+INSTRUCTIONS_IMAGE_PATH = "/home/demo/catkin_ws/src/AIfred/Videos_and_pictures/0_instructions.png"
 
 
 
