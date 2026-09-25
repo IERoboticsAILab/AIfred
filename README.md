@@ -37,7 +37,7 @@ The objective of the project is to have a friend and tool at the disposal of the
 
 <br>
 
-The agent has 3 intelligent modes:
+The agent has 3 interaction modes:
 
 - HOMEWORK - Project examples, wisdome pills, and explanations to help you with your homework, and learning process.
 
@@ -66,14 +66,15 @@ To run the code you will need some prerequisites:
 #### Hardware set-up
 
 1. Setup:
-    <div align="center">
-      <table>
-          <tr>
-              <td><img src="Videos_and_pictures/HardwareSetup.png" alt="Hardware setup" width="180"></td>
-              <td><img src="Videos_and_pictures/FullSetup.png" alt="Full setup" width="375"></td>
-          </tr>
-      </table>
-  </div>
+<div align="center">
+  <table>
+      <tr>
+          <td><img src="Videos_and_pictures/HardwareSetup.png" alt="Hardware setup" width="180"></td>
+          <td><img src="Videos_and_pictures/FullSetup.png" alt="Full setup" width="375"></td>
+      </tr>
+  </table>
+</div>
+
 2. Take Trossenrobotics wx250s, and secure it on table. Connect it to his power supply and connect signal USB to the computer.
 3. Mount Kodak Projector on the end-effector of the Trossenrobotics Robot arm (wx250s) (download [this](https://github.com/IERoboticsAILab/3d_printing_designs/blob/main/files/WX-250_robot_garden/support_projector_wx250s.stl) for the attachment).
 4. Attach chromcast to the HDMI of the kodak projector mini and power with a USB from chromcast to projector.
@@ -86,8 +87,6 @@ To run the code you will need some prerequisites:
 
 
 #### Install software
-
-1. Create a Gemini API and it them in a `.env` file
 
 2. Download [natnet_ros_cpp](https://github.com/L2S-lab/natnet_ros_cpp) ROS package
 
@@ -102,6 +101,9 @@ To run the code you will need some prerequisites:
     catkin build  #OR catkin_make
     . devel/setup.bash
     ```
+
+1. Create a Gemini API and save it in a `.env` file, in `~/catkin_ws/src/AIfred_clever_lamp/alfred_clever_lamp/src` add `GEMINI_API_KEY=YOUR_GEMINI_API_KEY` to the `.env` file.
+
 5. Open chrome (better account with youtube premium) tab (will be used for casting generated content)
 
 6. Open FireFox tab (will be used for showiung user instructions)
