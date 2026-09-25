@@ -104,7 +104,7 @@ To run the code you will need some prerequisites:
 
 1. Create a Gemini API and save it in a `.env` file, in `~/catkin_ws/src/AIfred_clever_lamp/alfred_clever_lamp/src` add `GEMINI_API_KEY=YOUR_GEMINI_API_KEY` to the `.env` file.
 
-5. Open chrome (better account with youtube premium) tab (will be used for casting generated content)
+5. Open chrome tab (will be used for casting generated content)
 
 6. Open FireFox tab (will be used for showiung user instructions)
 
