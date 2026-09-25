@@ -114,8 +114,8 @@ To run the code you will need some prerequisites:
 
 ```bash
 uv sync
-
 sudo apt install xdotool
+source catkin_ws/src/AIfred_clever_lamp/.venv/bin/activate
 ```
 
 #### Run demo
