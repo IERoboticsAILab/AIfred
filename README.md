@@ -112,6 +112,7 @@ To run the code you will need some prerequisites:
 8. Create virtual environment and download all the dependencies for computer vision 
 
 ```bash
+#uv venv --system-site-packages # in case 'no modue lamed pyyaml or modern-robotics PyKDL'
 uv sync
 sudo apt install xdotool
 source catkin_ws/src/AIfred/.venv/bin/activate
