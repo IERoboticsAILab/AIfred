@@ -96,7 +96,7 @@ To run the code you will need some prerequisites:
 
     ```
     cd ~/catkin_ws/src
-    git clone https://github.com/IERoboticsAILab/clever_lamp.git
+    git clone https://github.com/IERoboticsAILab/AIfred.git
     cd ..
     catkin build  #OR catkin_make
     . devel/setup.bash
