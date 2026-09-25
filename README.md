@@ -88,7 +88,7 @@ To run the code you will need some prerequisites:
 
 #### Install software
 
-2. Download [natnet_ros_cpp](https://github.com/L2S-lab/natnet_ros_cpp) ROS package
+1. Download [natnet_ros_cpp](https://github.com/L2S-lab/natnet_ros_cpp) ROS package
 
 3. Downlaod [Trossenrobotics ROS Pakages](https://docs.trossenrobotics.com/interbotix_xsarms_docs/ros_interface/ros1/software_setup.html) (our guide [here](https://github.com/IERoboticsAILab/wx250s_documentation))
 
