@@ -1,7 +1,7 @@
 <h1 align="center">🤖 AIfred – Your Clever Robotic Study Companion</h1>
 
 <p align="center">
-  <img src="Videos_and_pictures/diagram.png" alt="AIfred System Diagram" width="600"/>
+  <img src="Videos_and_pictures/AIfredBestFriend.png" alt="AIfred System Diagram" width="600"/>
 </p>
 
 <p align="center">
@@ -67,8 +67,13 @@ To run the code you will need some prerequisites:
 
 1. Setup:
     <div align="center">
-    <img src="Videos_and_pictures/station_setup.png" alt="station setup" width="750">
-    </div>
+      <table>
+          <tr>
+              <td><img src="Videos_and_pictures/HardwareSetup.png" alt="Hardware setup" width="180"></td>
+              <td><img src="Videos_and_pictures/FullSetup.png" alt="Full setup" width="375"></td>
+          </tr>
+      </table>
+  </div>
 2. Take Trossenrobotics wx250s, and secure it on table. Connect it to his power supply and connect signal USB to the computer.
 3. Mount Kodak Projector on the end-effector of the Trossenrobotics Robot arm (wx250s) (download [this](https://github.com/IERoboticsAILab/3d_printing_designs/blob/main/files/WX-250_robot_garden/support_projector_wx250s.stl) for the attachment).
 4. Attach chromcast to the HDMI of the kodak projector mini and power with a USB from chromcast to projector.
@@ -160,7 +165,7 @@ The launch file will execute all the necessary nodes to have the full demo runni
 
 ### Usage
 
-![AIfred Instructions](Videos_and_pictures/0_instructions.png)
+![AIfred Interaction Modes](Videos_and_pictures/InteractionModes.png)
 
 1. Move the Universal Marker and the robot will follow pointing the projector content on the table.
 
@@ -169,6 +174,8 @@ The launch file will execute all the necessary nodes to have the full demo runni
 3. Rotate the marker to show next/previous.
 
 4. Lift TUI to go to the next mode
+
+![AIfred Instructions](Videos_and_pictures/0_instructions.png)
 
 ## Resources
 
