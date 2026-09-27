@@ -14,6 +14,8 @@ Open <http://localhost:8000>. Check that the video loads, both task sliders move
 
 ## Publish
 
-Push to `main`, then set **Settings → Pages → Build and deployment → Source** to **GitHub Actions**. The `Deploy project page` workflow publishes `docs/` on each push. GitHub shows the URL under **Settings → Pages**.
+Before the first deployment, a repository admin must enable Pages: open **Settings → Pages**, then set **Build and deployment → Source** to **GitHub Actions**. The workflow cannot create the Pages site using GitHub's built-in workflow token; without this one-time setting, `configure-pages` returns `Not Found`.
 
-The Paper and arXiv buttons currently point to `#`. Replace their `href` values in `index.html` when those links are available.
+Then push to `main` or rerun **Actions → Deploy project page**. The workflow publishes `docs/` and GitHub shows the URL under **Settings → Pages**.
+
+The arXiv button currently points to `#`. Replace its `href` in `index.html` when the preprint is available.

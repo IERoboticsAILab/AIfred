@@ -8,78 +8,80 @@
     <title>AIfred — Augmented Learning at the Desk</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Noto+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css?v=4">
   </head>
   <body>
-    <header class="site-header"><a class="brand" href="#top"><span class="brand-mark">A</span> AIfred</a><a class="repo-link" href="https://github.com/IERoboticsAILab/AIfred" target="_blank" rel="noreferrer">Source code <span>↗</span></a></header>
     <main id="top">
       <section class="paper-head content-width">
-        <p class="paper-kicker">ROBOTIC SPATIAL AI · ICRA 2027</p>
         <h1>AIfred: Augmented Learning through<br class="desktop-break"> Functional Robotic Embodiment at the Desk</h1>
-        <p class="authors">Gregorio Orlando</p>
+        <div class="authors" aria-label="Authors">
+          <div class="author"><span class="author-name">Gregorio Orlando</span><span class="affiliation">CyPhy Life, IE University, Spain</span></div>
+          <div class="author"><span class="author-name">Milan Groshev</span><span class="affiliation">CyPhy Life, IE University, Spain</span></div>
+          <div class="author"><span class="author-name">Eduardo Castelló Ferrer</span><span class="affiliation">CyPhy Life, IE University, Spain</span></div>
+        </div>
         <p class="venue">Submitted to the IEEE International Conference on Robotics and Automation (ICRA 2027)</p>
         <div class="resource-links" aria-label="Project resources">
-          <a class="resource-button" href="#" aria-label="Paper archive link coming soon"><span class="resource-icon">↗</span> Paper</a>
-          <a class="resource-button" href="#" aria-label="arXiv link coming soon"><span class="resource-icon">↗</span> arXiv</a>
-          <a class="resource-button" href="#video"><span class="resource-icon">▶</span> Video</a>
+          <a class="resource-button" href="https://github.com/IERoboticsAILab/AIfred" target="_blank" rel="noreferrer"><svg class="github-icon" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 .9A11.1 11.1 0 0 0 8.49 22.53c.55.1.76-.24.76-.54v-2.1c-3.1.67-3.76-1.32-3.76-1.32-.5-1.28-1.23-1.62-1.23-1.62-1.01-.69.08-.68.08-.68 1.12.08 1.71 1.15 1.71 1.15 1 .1.93 2.02 3.26 1.44.1-.72.39-1.2.7-1.48-2.48-.28-5.1-1.24-5.1-5.52 0-1.22.44-2.22 1.16-3-.12-.28-.5-1.42.11-2.95 0 0 .95-.3 3.05 1.14a10.6 10.6 0 0 1 5.55 0c2.1-1.43 3.05-1.14 3.05-1.14.61 1.53.23 2.67.11 2.95.72.78 1.16 1.78 1.16 3 0 4.3-2.62 5.23-5.12 5.51.4.35.75 1.02.75 2.06v3.06c0 .3.2.65.77.54A11.1 11.1 0 0 0 12 .9Z"/></svg> Code</a>
+          <a class="resource-button" href="https://arxiv.org/abs/2603.06058" target="_blank" rel="noreferrer"><span class="arxiv-icon">ar<span>X</span>iv</span></a>
+          <a class="resource-button" href="https://www.youtube.com/watch?v=L3PLWqSPDGM" target="_blank" rel="noreferrer"><svg class="video-icon" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M4 2.2c-.55-.32-1.25.08-1.25.72v10.16c0 .64.7 1.04 1.25.72l8.5-5.08a.84.84 0 0 0 0-1.44L4 2.2Z"/></svg> Video</a>
         </div>
       </section>
 
       <section id="video" class="video-section content-width" aria-label="AIfred project video">
-        <div class="video-frame"><iframe src="https://www.youtube-nocookie.com/embed/L3PLWqSPDGM?rel=0" title="AIfred project video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+        <div class="video-frame"><iframe src="https://www.youtube-nocookie.com/embed/L3PLWqSPDGM?autoplay=1&amp;mute=1&amp;controls=1&amp;playsinline=1&amp;rel=0" title="AIfred project video" allow="autoplay; accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
       </section>
 
       <section class="paper-section content-width abstract-section" id="abstract">
         <h2>Abstract</h2>
-        <p>Desk-based learning and creative work benefit from handwritten engagement, yet AI guidance typically appears on a separate screen. We present AIfred, a desk-based robotic arm with a projector that places AI-generated guidance alongside handwritten work. AIfred combines workspace perception, context-aware content generation, and robot-mediated projection to support math, image-generation, and drawing tasks. In a study with 36 participants, AIfred performed comparably to laptop-based ChatGPT during a math assignment and improved short-term learning transfer after assistance was removed. Independent art and design professors ranked AIfred-assisted drawings best in 33 of 36 cases.</p>
+        <p>Desk-based learning and creative activities benefit from handwritten engagement, yet generative AI tools deliver guidance on a separate screen, creating a gap between where users think and where assistance appears. We present AIfred, a desk-based robotic arm with an end-effector-mounted projector that places AI-generated guidance alongside handwritten work. AIfred combines workspace perception, context-aware content generation, and robot-mediated projection to support math assignments, image generation, and drawing. In a user study (<em>n</em> = 36) comparing AIfred with ChatGPT (GPT-5.6 Luna) on a laptop, both systems performed comparably while assistance was available in the math assignment (6.7 vs. 7.3/10, <em>p</em> = .41), but AIfred yielded 60% higher short-term learning transfer once assistance was withdrawn (7.0 vs. 4.4/10, <em>p</em> = .003). Independent art and design professors ranked drawings produced with AIfred best in 33 of 36 cases. These findings indicate that spatially co-located AI assistance benefits tasks whose guidance shares a spatial frame with the work.</p>
       </section>
 
       <section class="paper-section content-width why-section" id="why">
         <div class="section-heading"><span class="section-number">01</span><h2>Why it matters</h2></div>
         <div class="why-grid">
-          <div class="why-copy"><p>People think, solve problems, and make things at a physical desk. Screen-based AI asks them to move between that work and a separate digital space.</p><p>AIfred projects context-aware support back into the workspace, keeping the guidance close to the task.</p></div>
-          <div class="overview-pair"><figure class="editorial-figure sketch-figure"><img src="assets/alfred-sketch.png" alt="AIfred artistic overview sketch"><figcaption>Concept: AI guidance projected onto the working surface.</figcaption></figure><figure class="editorial-figure sketch-figure"><img src="assets/alfred-best-friend.png" alt="AIfred artistic rendering as a desk companion"><figcaption>A robotic companion for learning and creative work.</figcaption></figure></div>
+          <div class="why-copy"><p>Many learning and creative activities unfold on paper at a physical desk, where handwriting encourages reformulation rather than passive transcription. Current AI tools, however, live on a screen: users must switch context between the paper they work on and the display where guidance appears.</p><p>AIfred closes this gap. It perceives the user's physical task, generates context-dependent support, and projects it back onto the desk, beside the work.</p></div>
+          <figure class="editorial-figure why-figure"><img src="assets/alfred-sketch.png" alt="AIfred artistic overview: a robotic projector assists a person working at a desk"><figcaption>AIfred combines a robotic arm, a projector, and an overhead camera to deliver AI assistance directly on the user's desk.</figcaption></figure>
         </div>
       </section>
 
       <section class="paper-section content-width method-section" id="method">
         <div class="section-heading"><span class="section-number">02</span><h2>Methodology &amp; setup</h2></div>
-        <p class="section-intro">AIfred turns a physical task into spatially aligned assistance through three stages.</p>
+        <p class="section-intro">AIfred's spatial assistance pipeline turns a physical task into co-located guidance in three stages.</p>
         <div class="pipeline" aria-label="AIfred's three-stage pipeline">
-          <article><span>01</span><h3>Perceive</h3><p>An overhead camera captures the workspace and detects pointing gestures.</p></article>
-          <article><span>02</span><h3>Generate</h3><p>A multimodal model interprets the scene and creates task-relevant guidance.</p></article>
-          <article><span>03</span><h3>Project</h3><p>A tracked robotic arm places the guidance beside the user's work.</p></article>
+          <article><span>01</span><h3>Workspace perception</h3><p>An overhead camera captures the desk; a pointing gesture selects the region where assistance is needed.</p></article>
+          <article><span>02</span><h3>Content generation</h3><p>A multimodal model interprets the selected region under the active interaction mode and generates task-relevant guidance.</p></article>
+          <article><span>03</span><h3>Robot-mediated projection</h3><p>The robotic arm projects the guidance onto the desk at the location indicated by a tracked object.</p></article>
         </div>
-        <figure class="editorial-figure system-figure"><img src="assets/system-design.png" alt="AIfred system design"><figcaption>System overview: workspace perception, content generation, and robotic projection.</figcaption></figure>
+        <figure class="editorial-figure system-figure"><img src="assets/system-design.png" alt="AIfred system design"><figcaption>Spatial assistance pipeline: workspace perception, context-aware content generation, and robot-mediated projection.</figcaption></figure>
 
         <div class="setup-block">
-          <div class="subsection-heading"><h3>Hardware</h3><p>A robotic arm carries a mini projector. An overhead camera observes the desk, while motion capture tracks a user-moved marker to position projected content.</p></div>
-          <div class="hardware-grid"><figure class="editorial-figure"><img src="assets/hardware-setup.png" alt="AIfred hardware setup"><figcaption>Hardware components and workspace.</figcaption></figure><figure class="editorial-figure"><img src="assets/full-setup.png" alt="Full AIfred robotic desk setup"><figcaption>Full robotic projection setup.</figcaption></figure></div>
+          <div class="subsection-heading"><h3>Hardware</h3><p>A robotic arm carries a mini projector at its end-effector. An OptiTrack motion-capture system tracks the robot base and a trackable object that the user moves to choose where content appears; an inverse-kinematics solver then orients the projector toward that target at a fixed height above the desk. An overhead camera provides a top-down view of the task.</p></div>
+          <figure class="editorial-figure hardware-figure"><img src="assets/hardware-setup.png" alt="AIfred hardware components arranged around the workspace"><figcaption>Experimental setup: robotic arm (1), mini projector (2), projection output (3), OptiTrack motion capture (4), trackable object (5), and overhead USB camera (6).</figcaption></figure>
         </div>
 
         <div class="setup-block software-block">
-          <div class="subsection-heading"><h3>Perception &amp; interaction</h3><p>The camera captures the task and pointing gesture; a multimodal model generates relevant support; the robot projects it beside the work. AIfred supports homework, image generation, and drawing.</p></div>
+          <div class="subsection-heading"><h3>Perception &amp; interaction</h3><p>MediaPipe continuously tracks the user's hand; a pointing gesture triggers a capture of the selected region. The image and the active interaction mode are sent to Google's Gemini models (gemini-3.8-flash for scene understanding and reasoning, gemini-2.5-flash-image for image generation). Structured prompts favour scaffolding, such as hints, formulas, and analogous examples, over direct answers. Three modes are supported: math homework, image generation, and drawing.</p></div>
           <div class="software-grid"><figure class="editorial-figure"><img src="assets/software-robot.png" alt="AIfred robot software pipeline"><figcaption>Robot control and spatial alignment.</figcaption></figure><figure class="editorial-figure"><img src="assets/software-perception.png" alt="AIfred perception software pipeline"><figcaption>Workspace perception and task understanding.</figcaption></figure></div>
-          <figure class="editorial-figure interaction-figure"><img src="assets/interaction-modes.png" alt="AIfred interaction modes"><figcaption>Three desk-based tasks: homework, generate image, and draw.</figcaption></figure>
+          <figure class="editorial-figure interaction-figure"><img src="assets/interaction-modes.png" alt="AIfred's homework, image-generation, and drawing interaction modes"><figcaption>Illustration of AIfred interaction scenarios, organized by interaction mode (math homework, generate image, and draw) and interaction phase: Phase 1, user interaction (request assistance for task); Phase 2, content generation and robot projection (perform task); and Phase 3, result (task done).</figcaption></figure>
         </div>
 
         <div class="task-comparisons">
-          <div class="subsection-heading"><h3>From input to projected support</h3><p>Drag each divider to compare the task input with AIfred's visual output.</p></div>
+          <div class="subsection-heading"><h3>From input to projected support</h3><p>Drag each divider to compare the user's physical input with the result obtained with AIfred.</p></div>
           <div class="task-grid">
-            <article class="task-card"><h4>Drawing</h4><div class="comparison-frame" style="--split:50%"><img class="comparison-base" src="assets/draw-input.png" alt="Drawing task input"><div class="comparison-top"><img src="assets/draw-output.png" alt="Drawing task output with AIfred"></div><span class="comparison-label label-input">INPUT</span><span class="comparison-label label-output">AIFRED</span><span class="comparison-handle" aria-hidden="true">↔</span><input type="range" min="0" max="100" value="50" aria-label="Compare drawing input and AIfred output"></div></article>
-            <article class="task-card"><h4>Generate image</h4><div class="comparison-frame" style="--split:50%"><img class="comparison-base" src="assets/generate-input.png" alt="Image-generation task input"><div class="comparison-top"><img src="assets/generate-output.png" alt="Image-generation task output with AIfred"></div><span class="comparison-label label-input">INPUT</span><span class="comparison-label label-output">AIFRED</span><span class="comparison-handle" aria-hidden="true">↔</span><input type="range" min="0" max="100" value="50" aria-label="Compare image-generation input and AIfred output"></div></article>
+            <article class="task-card"><h4>Drawing</h4><div class="comparison-frame" style="--split:50%"><div class="comparison-base-layer"><img src="assets/draw-input.png" alt="Drawing task input"><span class="comparison-label label-input">INPUT</span></div><div class="comparison-top"><img src="assets/draw-output.png" alt="Drawing task output with AIfred"><span class="comparison-label label-output">AIFRED</span></div><span class="comparison-handle" aria-hidden="true">↔</span><input type="range" min="0" max="100" value="50" aria-label="Compare drawing input and AIfred output"></div></article>
+            <article class="task-card"><h4>Generate image</h4><div class="comparison-frame generate-comparison" style="--split:50%"><div class="comparison-base-layer"><img src="assets/generate-input.png" alt="Image-generation task input"><span class="comparison-label label-input">INPUT</span></div><div class="comparison-top"><img src="assets/generate-output.png" alt="Image-generation task output with AIfred"><span class="comparison-label label-output">AIFRED</span></div><span class="comparison-handle" aria-hidden="true">↔</span><input type="range" min="0" max="100" value="50" aria-label="Compare image-generation input and AIfred output"></div></article>
           </div>
         </div>
       </section>
 
       <section class="paper-section content-width results-section" id="results">
         <div class="section-heading"><span class="section-number">03</span><h2>Results</h2></div>
-        <p class="section-intro">36 participants compared AIfred with ChatGPT (GPT-5.6 Luna) on a laptop across math, image-generation, and drawing tasks.</p>
+        <p class="section-intro">In a mixed-design user study (<em>n</em> = 36), participants completed math, image-generation, and drawing tasks with either AIfred or ChatGPT (GPT-5.6 Luna) on a laptop.</p>
         <div class="results-grid">
-          <article class="result"><strong>60<span>%</span></strong><h3>higher learning transfer</h3><p>After assistance was removed: 7.0/10 with AIfred vs. 4.4/10 with ChatGPT (<em>p</em> = .003).</p></article>
-          <article class="result"><strong>33<span>/36</span></strong><h3>drawings ranked best</h3><p>Independent art and design professors preferred AIfred-assisted drawings.</p></article>
-          <article class="result"><strong>Comparable</strong><h3>math performance with help</h3><p>6.7/10 with AIfred vs. 7.3/10 with ChatGPT (<em>p</em> = .41).</p></article>
+          <article class="result"><strong>60<span>%</span></strong><h3>higher short-term learning transfer</h3><p>With assistance withdrawn, math scores were 7.0/10 after AIfred vs. 4.4/10 after ChatGPT (<em>p</em> = .003).</p></article>
+          <article class="result"><strong>33<span>/36</span></strong><h3>drawings ranked best</h3><p>Three independent art and design professors ranked AIfred-assisted drawings first in 92% of cases (Kendall's <em>W</em> = .86).</p></article>
+          <article class="result"><strong>98<span>%</span></strong><h3>fewer context switches</h3><p>On average, 1 physical-digital switch with AIfred vs. 63 with ChatGPT, with no loss in perceived productivity (<em>p</em> = .61).</p></article>
         </div>
       </section>
     </main>
