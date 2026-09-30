@@ -28,14 +28,22 @@
 @media(max-width:650px){.hardware-list,.modes-grid{grid-template-columns:1fr}.mode-card+.mode-card{border-left:0;border-top:1px solid var(--line)}}
 .result-detail{margin-top:44px}
 .result-detail h3{margin:0 0 14px;font:700 17px var(--display);letter-spacing:-.02em;color:#202124}
-.result-detail>p{max-width:760px;margin:16px auto 0;color:#4e5358;font-size:13px;line-height:1.8}
-.result-figure{text-align:center}.result-figure img{width:100%;max-width:440px;max-height:none;margin:0 auto;background:#fff}.result-figure-math img{max-width:280px}
-.result-figure figcaption{text-align:center;max-width:620px;margin:10px auto 0}
+.result-detail>p{margin:0 0 13px;color:#4e5358;font-size:13px;line-height:1.8}
+.result-detail::after{content:"";display:block;clear:both}
+/* Results charts float beside the text; the text wraps around them, then continues full width. Change "width" to resize a chart. */
+.result-figure{float:left;width:380px;margin:4px 30px 14px 0}.result-figure img{width:100%;max-height:none;background:#fff}
+.result-figure-math{width:270px}
+.result-figure-right{float:right;width:420px;margin:4px 0 14px 30px}
+.result-figure figcaption{text-align:left;margin:8px 0 0}
+@media(max-width:650px){.result-figure,.result-figure-right{float:none;width:100%;max-width:420px;margin:0 auto 16px}.result-figure-math{max-width:280px}.result-figure figcaption{text-align:center}}
 .result-detail .result-lead{margin:0 0 15px}
 .task-desc{margin:0 0 10px;color:#5f6368;font-size:12px;line-height:1.6}
 .result-conclusion{padding:14px 18px;border-left:3px solid var(--blue);background:#f8f9fa;color:#202124!important;font-weight:500}
 /* Draw mode "Before and after": size of the AIfred elephant. 1 = full frame height; bigger = larger (above ~1.45 it starts touching the top/bottom) */
-.draw-comparison{--draw-zoom:1.6}
-.draw-comparison .comparison-top{background:linear-gradient(90deg,#a49b90,#cac0b6)}.draw-comparison .comparison-top img{object-fit:contain;transform:scale(var(--draw-zoom))}
+/* --draw-shift moves the elephant sideways: positive = right, negative = left, 0 = centered */
+.draw-comparison{--draw-zoom:1.6;--draw-shift:6%}
+.draw-comparison .comparison-top{background:linear-gradient(90deg,#a49b90,#cac0b6)}.draw-comparison .comparison-top img{object-fit:contain;transform:translateX(var(--draw-shift)) scale(var(--draw-zoom))}
 /* Why it matters: image centered on top (600px wide), paragraph below */
 .why-grid{display:block}.why-figure{max-width:600px;margin:0 auto 22px;text-align:center}.why-figure img{width:100%;max-height:none;margin:0 auto}
+/* Interaction modes: looping demo video at the top of each card, full card width */
+.mode-video{display:block;width:calc(100% + 36px);margin:-16px -18px 14px;aspect-ratio:16/9;object-fit:cover;background:#f1f3f4}
