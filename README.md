@@ -20,17 +20,6 @@
   AIfred is an interactive robotic lamp designed to enhance your learning experience. It responds to hand gestures, retrieves real-time information, and seamlessly blends digital and physical spaces using computer vision and AI. Built with ROS, Mediapipe, and Gemini API, it turns study time into an intuitive and focused conversation.
 </p>
 
-<br>
-
-<p align="center">
-  <a href="https://www.youtube.com/watch?v=713YKEyMPpI&autoplay=1">
-    <img src="https://img.youtube.com/vi/713YKEyMPpI/maxresdefault.jpg" alt="Watch the AIfred demo video" width="600"/>
-  </a>
-</p>
-
-<p align="center">
-  <a href="https://www.youtube.com/watch?v=713YKEyMPpI&autoplay=1">▶ Watch the demo video</a>
-</p>
 
 <br>
 
