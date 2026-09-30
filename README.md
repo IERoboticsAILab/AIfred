@@ -155,7 +155,7 @@ The launch file will execute all the necessary nodes to have the full demo runni
     ```
     OR
     ```
-    roslaunch natnet_ros_cpp natnet_ros.launch serverIP:=<optitrack_ip> clientIP:=<your_ip> pub_rigid_body:=true pub_rigid_body_marker:=true serverType:=unicast
+    roslaunch natnet_ros_cpp natnet_ros.launch serverIP:=<optitrack_ip> clientIP:=<your_ip> pub_rigid_body:=true pub_rigid_body_marker:=true serverType:=multicast
     ```
 
     <div align="center">

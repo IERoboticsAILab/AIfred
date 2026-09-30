@@ -50,7 +50,7 @@
 
   <arg name="serverIP" default="10.205.3.3"/>
   <arg name="clientIP" default="10.205.3.171"/>
-  <arg name="serverType" default="unicast"/>
+  <arg name="serverType" default="multicast"/>
   <arg name="multicastAddress" default="239.255.42.99"/>
   <arg name="serverCommandPort" default="1510"/>
   <arg name="serverDataPort" default="1511"/>
