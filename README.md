@@ -18,9 +18,9 @@
 
 <p align="center">
   📺 <b>Watch the full demo on YouTube:</b><br>
-  <a href="https://www.youtube.com/watch?v=L3PLWqSPDGM">
-    <img src="https://img.youtube.com/vi/L3PLWqSPDGM/0.jpg" alt="YouTube Demo Video" width="400"/><br>
-    https://www.youtube.com/watch?v=L3PLWqSPDGM
+  <a href="https://www.youtube.com/watch?v=713YKEyMPpI">
+    <img src="https://img.youtube.com/vi/713YKEyMPpI/0.jpg" alt="YouTube Demo Video" width="400"/><br>
+    https://www.youtube.com/watch?v=713YKEyMPpI
   </a>
 </p>
 
