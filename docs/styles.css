@@ -14,3 +14,28 @@
 @media(max-width:650px){.interaction-figure{width:calc(100vw - 36px)}}
 
 .hardware-figure{text-align:center}.hardware-figure img{width:100%;max-width:700px;max-height:none;margin:0 auto;background:#fff}.hardware-figure figcaption{text-align:center;max-width:760px;margin:10px auto 0}
+.hardware-figure{text-align:center}.hardware-figure img{width:100%;max-width:820px;max-height:none;margin:0 auto}.hardware-figure figcaption{text-align:center;max-width:760px;margin:10px auto 0}
+.hardware-list{display:grid;grid-template-columns:repeat(3,1fr);gap:14px 22px;margin:24px 0 0;padding:0;list-style:none;counter-reset:hw}
+.hardware-list li{counter-increment:hw;font-size:12px;line-height:1.6;color:#5f6368}
+.hardware-list li strong{display:block;color:#202124;font:700 13px var(--display)}
+.hardware-list li strong::before{content:counter(hw) ". ";color:var(--blue)}
+.pipeline-copy p{max-width:760px;margin:0 0 13px;color:#4e5358;font-size:13px;line-height:1.8}
+.modes-grid{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--line);margin:28px 0 16px}
+.mode-card{padding:16px 18px}.mode-card+.mode-card{border-left:1px solid var(--line)}
+.mode-card h3{margin:0 0 8px;font:700 14px var(--display)}
+.mode-card p{margin:0 0 8px;color:#5f6368;font-size:12px;line-height:1.65}.mode-card strong{color:#202124}
+.modes-note{margin:0;color:#747a80;font-size:12px;line-height:1.6}
+@media(max-width:650px){.hardware-list,.modes-grid{grid-template-columns:1fr}.mode-card+.mode-card{border-left:0;border-top:1px solid var(--line)}}
+.result-detail{margin-top:44px}
+.result-detail h3{margin:0 0 14px;font:700 17px var(--display);letter-spacing:-.02em;color:#202124}
+.result-detail>p{max-width:760px;margin:16px auto 0;color:#4e5358;font-size:13px;line-height:1.8}
+.result-figure{text-align:center}.result-figure img{width:100%;max-width:440px;max-height:none;margin:0 auto;background:#fff}.result-figure-math img{max-width:280px}
+.result-figure figcaption{text-align:center;max-width:620px;margin:10px auto 0}
+.result-detail .result-lead{margin:0 0 15px}
+.task-desc{margin:0 0 10px;color:#5f6368;font-size:12px;line-height:1.6}
+.result-conclusion{padding:14px 18px;border-left:3px solid var(--blue);background:#f8f9fa;color:#202124!important;font-weight:500}
+/* Draw mode "Before and after": size of the AIfred elephant. 1 = full frame height; bigger = larger (above ~1.45 it starts touching the top/bottom) */
+.draw-comparison{--draw-zoom:1.6}
+.draw-comparison .comparison-top{background:linear-gradient(90deg,#a49b90,#cac0b6)}.draw-comparison .comparison-top img{object-fit:contain;transform:scale(var(--draw-zoom))}
+/* Why it matters: image centered on top (600px wide), paragraph below */
+.why-grid{display:block}.why-figure{max-width:600px;margin:0 auto 22px;text-align:center}.why-figure img{width:100%;max-height:none;margin:0 auto}
