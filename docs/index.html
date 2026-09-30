@@ -38,7 +38,7 @@
       </section>
 
       <section class="paper-section content-width why-section" id="why">
-        <div class="section-heading"><span class="section-number">01</span><h2>Why it matters</h2></div>
+        <div class="section-heading"><h2>Why it matters</h2></div>
         <div class="why-grid">
           <figure class="editorial-figure why-figure"><img src="assets/alfred-sketch.png" alt="AIfred artistic overview: a robotic projector assists a person working at a desk"><figcaption>AIfred combines a robotic arm, a projector, and an overhead camera to deliver AI assistance directly on the user's desk.</figcaption></figure>
           <div class="why-copy"><p>Many learning and creative activities unfold on paper at a physical desk, where handwriting encourages reformulation rather than passive transcription. Current AI tools, however, live on a screen: users must switch context between the paper they work on and the display where guidance appears.</p><p>AIfred closes this gap. It perceives the user's physical task, generates context-dependent support, and projects it back onto the desk, beside the work.</p></div>
@@ -46,7 +46,7 @@
       </section>
 
       <section class="paper-section content-width hardware-section" id="hardware">
-        <div class="section-heading"><span class="section-number">02</span><h2>Hardware</h2></div>
+        <div class="section-heading"><h2>Hardware</h2></div>
         <p class="section-intro">AIfred is built from off-the-shelf components arranged around an ordinary desk. The projector rides on the robot, so the guidance can move to wherever the user is working.</p>
         <figure class="editorial-figure hardware-figure"><img src="assets/hardware-setup.png" alt="AIfred hardware components arranged around the workspace"><figcaption>Experimental setup: robotic arm (1), mini projector (2), projection output (3), OptiTrack motion capture (4), trackable object (5), and overhead USB camera (6).</figcaption></figure>
         <ol class="hardware-list">
@@ -54,13 +54,13 @@
           <li><strong>Mini projector</strong><span>Mounted at the end-effector; it displays the AI-generated content.</span></li>
           <li><strong>Projection output</strong><span>The guidance appears on the desk, right next to the paper.</span></li>
           <li><strong>OptiTrack motion capture</strong><span>Tracks the robot base and the trackable object in real time.</span></li>
-          <li><strong>Trackable object</strong><span>The user moves it to choose where content appears; an inverse-kinematics solver points the projector at it from a fixed height.</span></li>
+          <li><strong>Trackable object</strong><span>Tangible object that belongs to both digital and physical worlds.</span></li>
           <li><strong>Overhead USB camera</strong><span>Gives a top-down view of the task on the desk.</span></li>
         </ol>
       </section>
 
       <section class="paper-section content-width method-section" id="pipeline">
-        <div class="section-heading"><span class="section-number">03</span><h2>Software pipeline</h2></div>
+        <div class="section-heading"><h2>Software pipeline</h2></div>
         <p class="section-intro">AIfred's spatial assistance pipeline turns a physical task into co-located guidance in three stages.</p>
         <div class="pipeline" aria-label="AIfred's three-stage pipeline">
           <article><span>01</span><h3>Workspace perception</h3><p>An overhead camera captures the desk; a pointing gesture selects the region where assistance is needed.</p></article>
@@ -74,7 +74,7 @@
       </section>
 
       <section class="paper-section content-width modes-section" id="modes">
-        <div class="section-heading"><span class="section-number">04</span><h2>Interaction modes</h2></div>
+        <div class="section-heading"><h2>Interaction modes</h2></div>
         <p class="section-intro">Solving exercises, sketching ideas, and learning to draw are still done by hand on paper. AIfred supports each of them with a dedicated mode, and every interaction follows the same three phases: the user shows the work, the robot projects support, and the user completes the task.</p>
         <figure class="editorial-figure interaction-figure"><img src="assets/interaction-modes.png" alt="AIfred's homework, image-generation, and drawing interaction modes"><figcaption>AIfred interaction scenarios by mode (math homework, generate image, and draw) and phase: Phase 1, user interaction; Phase 2, robot projection; Phase 3, result.</figcaption></figure>
         <div class="modes-grid">
@@ -86,12 +86,12 @@
       </section>
 
       <section class="paper-section content-width results-section" id="results">
-        <div class="section-heading"><span class="section-number">05</span><h2>Results</h2></div>
+        <div class="section-heading"><h2>Results</h2></div>
         <p class="section-intro">We ran a mixed-design user study with 36 participants from across the university. Half used AIfred and half used ChatGPT (GPT-5.6 Luna) on a laptop. Everyone solved a quadratic equation, turned a sketch into a digital image, and drew a figure three times: without help, with their assigned system, and with the other system. About 35 minutes later, they solved a second equation with no assistance at all, to measure what they had actually learned.</p>
         <div class="results-grid">
-          <article class="result"><strong>60<span>%</span></strong><h3>higher short-term learning transfer</h3><p>With assistance withdrawn, math scores were 7.0/10 after AIfred vs. 4.4/10 after ChatGPT (<em>p</em> = .003).</p></article>
-          <article class="result"><strong>33<span>/36</span></strong><h3>drawings ranked best</h3><p>Three independent art and design professors ranked AIfred-assisted drawings first in 92% of cases (Kendall's <em>W</em> = .86).</p></article>
-          <article class="result"><strong>98<span>%</span></strong><h3>fewer context switches</h3><p>On average, 1 physical-digital switch with AIfred vs. 63 with ChatGPT, with no loss in perceived productivity (<em>p</em> = .61).</p></article>
+          <article class="result"><strong>60%</strong><h3>higher short-term learning transfer</h3><p>With assistance withdrawn, math scores were 7.0/10 after AIfred vs. 4.4/10 after ChatGPT (<em>p</em> = .003).</p></article>
+          <article class="result"><strong>33/36</strong><h3>drawings ranked best</h3><p>Three independent art and design professors ranked AIfred-assisted drawings first in 92% of cases (Kendall's <em>W</em> = .86).</p></article>
+          <article class="result"><strong>98%</strong><h3>fewer context switches</h3><p>On average, 1 physical-digital switch with AIfred vs. 63 with ChatGPT, with no loss in perceived productivity (<em>p</em> = .61).</p></article>
         </div>
 
         <div class="result-detail">
