@@ -1,4 +1,16 @@
-<h1 align="center">🤖 AIfred – Your Clever Robotic Study Companion</h1>
+<h1 align="center">AIfred: Augmented Learning through Functional Robotic Embodiment at the Desk</h1>
+
+<p align="center">
+<a href="https://www.youtube.com/watch?v=713YKEyMPpI">
+<img src="https://img.shields.io/badge/Demo-Video-cc0000?style=flat&logo=youtube&logoColor=white">
+</a>
+<a href="https://arxiv.org/abs/2603.06058">
+<img src="https://img.shields.io/badge/Paper-arXiv%202603.06058-8b1e3f?style=flat&logo=arxiv&logoColor=white">
+</a>
+<a href="https://aifred.cyphy.life/">
+<img src="https://img.shields.io/badge/Project-Website-1a73e8?style=flat&logo=googlechrome&logoColor=white">
+</a>
+</p>
 
 <p align="center">
   <img src="Videos_and_pictures/AIfredBestFriend.png" alt="AIfred System Diagram" width="600"/>
@@ -10,19 +22,17 @@
 
 <br>
 
-<br>
-
-<br>
-
-<br>
-
 <p align="center">
-  📺 <b>Watch the full demo on YouTube:</b><br>
-  <a href="https://www.youtube.com/watch?v=713YKEyMPpI">
-    <img src="https://img.youtube.com/vi/713YKEyMPpI/0.jpg" alt="YouTube Demo Video" width="400"/><br>
-    https://www.youtube.com/watch?v=713YKEyMPpI
+  <a href="https://www.youtube.com/watch?v=713YKEyMPpI&autoplay=1">
+    <img src="https://img.youtube.com/vi/713YKEyMPpI/maxresdefault.jpg" alt="Watch the AIfred demo video" width="600"/>
   </a>
 </p>
+
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=713YKEyMPpI&autoplay=1">▶ Watch the demo video</a>
+</p>
+
+<br>
 
 
 ## Intro
