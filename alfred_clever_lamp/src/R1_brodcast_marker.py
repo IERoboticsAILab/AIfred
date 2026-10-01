@@ -15,8 +15,8 @@ def pose_callback(msg):
     t.header.stamp = rospy.Time.now()
     t.header.frame_id = "wx250s/base_link"
     t.child_frame_id = "AIfred_umh_new"
-    t.transform.translation.x = -(msg.pose.position.y-pos_base[1])
-    t.transform.translation.y = (msg.pose.position.x-pos_base[0])
+    t.transform.translation.x = (msg.pose.position.y-pos_base[1])
+    t.transform.translation.y = -(msg.pose.position.x-pos_base[0])
     t.transform.translation.z = (msg.pose.position.z-pos_base[2]) 
     t.transform.rotation.x = 0.0
     t.transform.rotation.y = 0.0

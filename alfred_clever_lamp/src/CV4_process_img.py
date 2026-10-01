@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import rospy
+import rospkg
 from alfred_clever_lamp.msg import Mode, UrlToOpen, PointingObject
 import http.server
 import threading
@@ -33,9 +34,14 @@ os.makedirs(SERVE_DIR, exist_ok=True)
 
 
 ''' IMAGE PATHS '''
-ALLIGN_PAPER_IMAGE_PATH = "/home/demo/catkin_ws/src/AIfred/Videos_and_pictures/3_1_draw.png"
-THINKING_IMAGE_PATH = "/home/demo/catkin_ws/src/AIfred/Videos_and_pictures/0_thinking.png"
-OUTPUT_GENERATED_IMG_PATH = "/home/demo/catkin_ws/src/AIfred/Videos_and_pictures/generated_image.png"
+# Assets live beside the ROS package in the repository.
+IMAGE_DIR = os.path.join(
+    os.path.dirname(rospkg.RosPack().get_path("alfred_clever_lamp")),
+    "Videos_and_pictures",
+)
+ALLIGN_PAPER_IMAGE_PATH = os.path.join(IMAGE_DIR, "3_1_draw.png")
+THINKING_IMAGE_PATH = os.path.join(IMAGE_DIR, "0_thinking.png")
+OUTPUT_GENERATED_IMG_PATH = os.path.join(IMAGE_DIR, "generated_image.png")
 
 
 ''' SETUP GEMINI API '''

@@ -94,7 +94,7 @@ To run the code you will need some prerequisites:
 4. Download AIfred ROS Package:
 
     ```
-    cd /home/demo/catkin_ws/src
+    cd ~/catkin_ws/src
     git clone https://github.com/IERoboticsAILab/AIfred.git
     cd ..
     catkin build  #OR catkin_make
@@ -111,19 +111,27 @@ To run the code you will need some prerequisites:
 8. Create virtual environment and download all the dependencies for computer vision 
 
 ```bash
-#uv venv --system-site-packages # in case 'no modue lamed pyyaml or modern-robotics PyKDL'
-uv sync
+# Run from the AIfred repository, after sourcing the ROS/catkin workspace.
+# Use ROS Noetic's system Python so compiled ROS modules remain compatible.
+uv venv --python /usr/bin/python3 --system-site-packages
+uv sync --locked --python /usr/bin/python3
 sudo apt install xdotool
-source catkin_ws/src/AIfred/.venv/bin/activate
+source .venv/bin/activate
 ```
 
+The virtual environment inherits the shell's environment variables, including
+`PYTHONPATH` from the sourced ROS workspace. `--system-site-packages` also enables
+access to system Python packages such as PyKDL. If `.venv` already exists, check
+that `.venv/pyvenv.cfg` contains `include-system-site-packages = true` before syncing.
+
 #### Run demo
-make sure to change the absolute paths of of the images to `/home/<your_demo>`
+Keep `Videos_and_pictures` beside `alfred_clever_lamp`; image paths are resolved
+automatically. The NatNet client IP is also detected automatically.
 
 
 ```
 echo "$CMAKE_PREFIX_PATH"
-/home/demo/catkin_ws/devel:/home/demo/interbotix_ws/devel:/opt/ros/noetic
+/home/<user>/catkin_ws/devel:/home/<user>/interbotix_ws/devel:/opt/ros/noetic
 ```
 
 ```
