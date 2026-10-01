@@ -37,7 +37,8 @@ def create_custom_page_from_image(image_path):
         list[str]: A list containing the URL to the served HTML page.
     """
     # --- Config ---
-    SERVE_DIR = "/tmp/alfred_web"
+    # Both image-serving nodes must use the same user-owned directory.
+    SERVE_DIR = os.path.join(os.path.expanduser("~"), ".cache", "alfred", "web")
     PORT = 8766
 
     # 1. Prepare the serving directory
@@ -46,7 +47,7 @@ def create_custom_page_from_image(image_path):
     # 2. Copy the image into the serving directory
     image_filename = os.path.basename(image_path)
     dest_path = os.path.join(SERVE_DIR, image_filename)
-    shutil.copy2(image_path, dest_path)
+    shutil.copyfile(image_path, dest_path)
 
     # 3. Generate a simple HTML page that displays the image
     html_filename = image_filename.rsplit(".", 1)[0] + ".html"

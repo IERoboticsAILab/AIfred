@@ -113,6 +113,7 @@ To run the code you will need some prerequisites:
 ```bash
 # Run from the AIfred repository, after sourcing the ROS/catkin workspace.
 # Use ROS Noetic's system Python so compiled ROS modules remain compatible.
+export PATH="$HOME/.local/bin:$PATH"
 uv venv --python /usr/bin/python3 --system-site-packages
 uv sync --locked --python /usr/bin/python3
 sudo apt install xdotool
