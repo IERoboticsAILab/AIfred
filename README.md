@@ -4,8 +4,8 @@
 <a href="https://www.youtube.com/watch?v=713YKEyMPpI">
 <img src="https://img.shields.io/badge/Demo-Video-cc0000?style=flat&logo=youtube&logoColor=white">
 </a>
-<a href="https://arxiv.org/abs/2603.06058">
-<img src="https://img.shields.io/badge/Paper-arXiv%202603.06058-8b1e3f?style=flat&logo=arxiv&logoColor=white">
+<a href="https://arxiv.org/abs/2609.38737">
+<img src="https://img.shields.io/badge/Paper-arXiv%202609.38737-8b1e3f?style=flat&logo=arxiv&logoColor=white">
 </a>
 <a href="https://aifred.cyphy.life/">
 <img src="https://img.shields.io/badge/Project-Website-1a73e8?style=flat&logo=googlechrome&logoColor=white">
