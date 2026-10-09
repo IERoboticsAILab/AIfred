@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import rospy
+import rospkg
 from alfred_clever_lamp.msg import Mode, UrlToOpen, PointingObject
 import http.server
 import threading
@@ -12,11 +13,16 @@ import subprocess
 
 
 ''' IMAGE PATHS '''
-ARM_CONTROL_IMAGE_PATH = "/home/demo/catkin_ws/src/AIfred/Videos_and_pictures/0_arm_control.png"
-HOMEWORK_MODE_IMAGE_PATH = "/home/demo/catkin_ws/src/AIfred/Videos_and_pictures/1_homework.png"
-GENERATE_IMAGE_MODE_IMAGE_PATH = "/home/demo/catkin_ws/src/AIfred/Videos_and_pictures/2_generate_image.png"
-DRAW_MODE_IMAGE_PATH = "/home/demo/catkin_ws/src/AIfred/Videos_and_pictures/3_draw.png"
-INSTRUCTIONS_IMAGE_PATH = "/home/demo/catkin_ws/src/AIfred/Videos_and_pictures/0_instructions.png"
+# Assets live beside the ROS package in the repository.
+IMAGE_DIR = os.path.join(
+    os.path.dirname(rospkg.RosPack().get_path("alfred_clever_lamp")),
+    "Videos_and_pictures",
+)
+ARM_CONTROL_IMAGE_PATH = os.path.join(IMAGE_DIR, "0_arm_control.png")
+HOMEWORK_MODE_IMAGE_PATH = os.path.join(IMAGE_DIR, "1_homework.png")
+GENERATE_IMAGE_MODE_IMAGE_PATH = os.path.join(IMAGE_DIR, "2_generate_image.png")
+DRAW_MODE_IMAGE_PATH = os.path.join(IMAGE_DIR, "3_draw.png")
+INSTRUCTIONS_IMAGE_PATH = os.path.join(IMAGE_DIR, "0_instructions.png")
 
 
 
@@ -31,7 +37,8 @@ def create_custom_page_from_image(image_path):
         list[str]: A list containing the URL to the served HTML page.
     """
     # --- Config ---
-    SERVE_DIR = "/tmp/alfred_web"
+    # Both image-serving nodes must use the same user-owned directory.
+    SERVE_DIR = os.path.join(os.path.expanduser("~"), ".cache", "alfred", "web")
     PORT = 8766
 
     # 1. Prepare the serving directory
@@ -40,7 +47,7 @@ def create_custom_page_from_image(image_path):
     # 2. Copy the image into the serving directory
     image_filename = os.path.basename(image_path)
     dest_path = os.path.join(SERVE_DIR, image_filename)
-    shutil.copy2(image_path, dest_path)
+    shutil.copyfile(image_path, dest_path)
 
     # 3. Generate a simple HTML page that displays the image
     html_filename = image_filename.rsplit(".", 1)[0] + ".html"

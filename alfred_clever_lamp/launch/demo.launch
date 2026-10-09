@@ -49,8 +49,9 @@
   <arg name="log_latencies" default="false"/>
 
   <arg name="serverIP" default="10.205.3.3"/>
-  <arg name="clientIP" default="10.205.3.171"/>
-  <arg name="serverType" default="multicast"/>
+  <!-- Auto selects the local interface used to reach serverIP. -->
+  <arg name="clientIP" default="auto"/>
+  <arg name="serverType" default="unicast"/>
   <arg name="multicastAddress" default="239.255.42.99"/>
   <arg name="serverCommandPort" default="1510"/>
   <arg name="serverDataPort" default="1511"/>
@@ -65,7 +66,8 @@
 
   <group ns="conn_params">
     <param name="serverIP" value="$(arg serverIP)" type="str"/>
-    <param name="clientIP" value="$(arg clientIP)" type="str"/>
+    <param name="clientIP" type="str"
+           command="python3 &quot;$(find alfred_clever_lamp)/src/detect_client_ip.py&quot; --server &quot;$(arg serverIP)&quot; --port &quot;$(arg serverCommandPort)&quot; --client &quot;$(arg clientIP)&quot;"/>
     <param name="serverType" value="$(arg serverType)" type="str"/>
     <param name="multicastAddress" value="$(arg multicastAddress)" type="str"/>
     <param name="serverCommandPort" value="$(arg serverCommandPort)" type="int"/>
