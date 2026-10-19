@@ -137,10 +137,18 @@ echo "$CMAKE_PREFIX_PATH"
 
 ```
 roslaunch alfred_clever_lamp demo.launch use_rviz:=true use_sim:=true clientIP:=<your_ip>
+
+# or
+
+./catkin_ws/src/AIfred/alfred_clever_lamp/scripts/run_demo.sh use_sim:=true use_rviz:=true
 ```
 
 ```
 roslaunch alfred_clever_lamp demo.launch
+
+# or
+
+./catkin_ws/src/AIfred/alfred_clever_lamp/scripts/run_demo.sh 
 ```
 
 ##### Step by step instructions
