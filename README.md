@@ -87,7 +87,7 @@ To run the code you will need some prerequisites:
 
 #### Install software
 
-1. Download [natnet_ros_cpp](https://github.com/L2S-lab/natnet_ros_cpp) ROS package
+1. Download [natnet_ros_cpp](https://github.com/L2S-lab/natnet_ros_cpp) ROS package (**We stop using it, we have a server running NatNet for ROS1**)
 
 3. Downlaod [Trossenrobotics ROS Pakages](https://docs.trossenrobotics.com/interbotix_xsarms_docs/ros_interface/ros1/software_setup.html) (our guide [here](https://github.com/IERoboticsAILab/wx250s_documentation))
 
@@ -126,30 +126,23 @@ access to system Python packages such as PyKDL. If `.venv` already exists, check
 that `.venv/pyvenv.cfg` contains `include-system-site-packages = true` before syncing.
 
 #### Run demo
-Keep `Videos_and_pictures` beside `alfred_clever_lamp`; image paths are resolved
-automatically. The NatNet client IP is also detected automatically.
+Keep `Videos_and_pictures` beside `alfred_clever_lamp`.
 
+There are two ways to run it, depending on how you get the Optitrack data:
 
-```
-echo "$CMAKE_PREFIX_PATH"
-/home/<user>/catkin_ws/devel:/home/<user>/interbotix_ws/devel:/opt/ros/noetic
-```
+**You run NatNet yourself on this computer:** turn it on with `use_natnet:=true`.
 
 ```
-roslaunch alfred_clever_lamp demo.launch use_rviz:=true use_sim:=true clientIP:=<your_ip>
-
-# or
-
-./catkin_ws/src/AIfred/alfred_clever_lamp/scripts/run_demo.sh use_sim:=true use_rviz:=true
+roslaunch alfred_clever_lamp demo.launch use_natnet:=true
 ```
 
-```
-roslaunch alfred_clever_lamp demo.launch
+**NatNet already runs on a central server (our lab setup):** just use the script. It connects to the server's ROS master for you.
 
-# or
-
-./catkin_ws/src/AIfred/alfred_clever_lamp/scripts/run_demo.sh 
 ```
+./catkin_ws/src/AIfred/alfred_clever_lamp/scripts/run_demo.sh
+```
+
+Add `use_sim:=true use_rviz:=true` to either command if you want to try it in simulation without the real robot.
 
 ##### Step by step instructions
 The launch file will execute all the necessary nodes to have the full demo running, but if you want to run it step by step, here you have the instructions:
