@@ -1,0 +1,125 @@
+Panels:
+  - Class: rviz/Displays
+    Help Height: 0
+    Name: Displays
+    Property Tree Widget:
+      Expanded: ~
+      Splitter Ratio: 0.5
+    Tree Height: 600
+  - Class: rviz/Views
+    Expanded:
+      - /Current View1
+    Name: Views
+    Splitter Ratio: 0.5
+Preferences:
+  PromptSaveOnExit: false
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Alpha: 0.5
+      Cell Size: 0.1
+      Class: rviz/Grid
+      Color: 160; 160; 164
+      Enabled: true
+      Line Style:
+        Line Width: 0.03
+        Value: Lines
+      Name: Grid
+      Normal Cell Count: 0
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0
+      Plane: XY
+      Plane Cell Count: 20
+      Reference Frame: <Fixed Frame>
+      Value: true
+    - Alpha: 1
+      Class: rviz/RobotModel
+      Collision Enabled: false
+      Enabled: true
+      Links:
+        All Links Enabled: true
+        Expand Joint Details: false
+        Expand Link Details: false
+        Expand Tree: false
+        Link Tree Style: Links in Alphabetic Order
+      Name: RobotModel
+      Robot Description: robot_description
+      TF Prefix: ""
+      Update Interval: 0
+      Value: true
+      Visual Enabled: true
+    - Class: rviz/TF
+      Enabled: true
+      Frame Timeout: 15
+      Frames:
+        All Enabled: false
+        world:
+          Value: true
+        wx250s/base_link:
+          Value: true
+        wx250s/camera_link:
+          Value: true
+        wx250s/projector_link:
+          Value: true
+      Marker Alpha: 1
+      Marker Scale: 0.15
+      Name: TF
+      Show Arrows: false
+      Show Axes: true
+      Show Names: true
+      Update Interval: 0
+      Value: true
+  Enabled: true
+  Global Options:
+    Background Color: 48; 48; 48
+    Default Light: true
+    Fixed Frame: world
+    Frame Rate: 30
+  Name: root
+  Tools:
+    - Class: rviz/Interact
+      Hide Inactive Objects: true
+    - Class: rviz/MoveCamera
+    - Class: rviz/Select
+    - Class: rviz/FocusCamera
+    - Class: rviz/Measure
+    - Class: rviz/PublishPoint
+      Single click: true
+      Topic: /clicked_point
+  Value: true
+  Views:
+    Current:
+      Class: rviz/Orbit
+      Distance: 1.2
+      Enable Stereo Rendering:
+        Stereo Eye Separation: 0.06
+        Stereo Focal Distance: 1
+        Swap Stereo Eyes: false
+        Value: false
+      Focal Point:
+        X: 0.15
+        Y: 0
+        Z: 0.15
+      Focal Shape Fixed Size: false
+      Focal Shape Size: 0.05
+      Invert Z Axis: false
+      Name: Current View
+      Near Clip Distance: 0.01
+      Pitch: 0.5
+      Target Frame: <Fixed Frame>
+      Value: Orbit (rviz)
+      Yaw: 0.8
+    Saved: ~
+Window Geometry:
+  Displays:
+    collapsed: false
+  Height: 900
+  Hide Left Dock: false
+  Hide Right Dock: true
+  Views:
+    collapsed: true
+  Width: 1500
+  X: 60
+  Y: 40

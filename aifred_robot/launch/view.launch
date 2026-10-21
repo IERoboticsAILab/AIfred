@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<!-- PC (ROS_MASTER_URI = Raspberry Pi): RViz only.
+     roslaunch aifred_robot view.launch -->
+<launch>
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find aifred_robot)/rviz/aifred.rviz" ns="wx250s"/>
+</launch>

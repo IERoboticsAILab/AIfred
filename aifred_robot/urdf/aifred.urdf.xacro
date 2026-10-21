@@ -1,0 +1,137 @@
+<?xml version="1.0"?>
+<!--
+  AIfred: Interbotix WX250s arm with the custom base and the AIfred head
+  (camera + projector) mounted on the wrist instead of the gripper.
+
+  The arm chain (waist ... wrist_rotate) is the stock wx250s one: same link and
+  joint names, so the joint_states published by interbotix_xs_sdk drive it as-is.
+
+  End effector for IK: wx250s/camera_link, centre of the webcam lens, same
+  orientation as gripper_link (x forward, z up): the camera looks along -z.
+-->
+<robot name="aifred" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:property name="ns" value="wx250s/"/>
+  <xacro:property name="pi_offset" value="0.00001"/>
+  <xacro:property name="arm_meshes" value="package://interbotix_xsarm_descriptions/meshes/wx250s_meshes"/>
+  <xacro:property name="head_meshes" value="package://aifred_robot/meshes/head"/>
+  <!-- The head meshes come from a Fusion 360 export in world coordinates; this
+       shifts them so the mounting plate (back face, centre) is the head origin. -->
+  <xacro:property name="head_mesh_xyz" value="-0.095674 0.025867 -0.383021"/>
+
+  <material name="interbotix_black">
+    <texture filename="package://interbotix_xsarm_descriptions/meshes/interbotix_black.png"/>
+  </material>
+  <material name="aifred_silver">
+    <color rgba="0.70 0.70 0.70 1.0"/>
+  </material>
+  <material name="aifred_white">
+    <color rgba="0.92 0.92 0.92 1.0"/>
+  </material>
+
+  <xacro:macro name="mesh" params="file xyz:='0 0 0' rpy:='0 0 0' material">
+    <visual>
+      <origin xyz="${xyz}" rpy="${rpy}"/>
+      <geometry><mesh filename="${file}" scale="0.001 0.001 0.001"/></geometry>
+      <material name="${material}"/>
+    </visual>
+  </xacro:macro>
+
+  <xacro:macro name="arm_joint" params="name axis lower upper effort xyz parent child">
+    <joint name="${name}" type="revolute">
+      <axis xyz="${axis}"/>
+      <limit effort="${effort}" lower="${lower}" upper="${upper}" velocity="${pi}"/>
+      <origin rpy="0 0 0" xyz="${xyz}"/>
+      <parent link="${ns}${parent}"/>
+      <child link="${ns}${child}"/>
+    </joint>
+  </xacro:macro>
+
+  <link name="world"/>
+  <joint name="fixed" type="fixed">
+    <parent link="world"/>
+    <child link="${ns}base_link"/>
+  </joint>
+
+  <!-- ============================ ARM ============================ -->
+
+  <link name="${ns}base_link">
+    <xacro:mesh file="package://aifred_robot/meshes/base_AIfred2.stl" material="aifred_white"/>
+  </link>
+
+  <xacro:arm_joint name="waist" axis="0 0 1" lower="${-pi + pi_offset}" upper="${pi - pi_offset}" effort="10"
+                   xyz="0 0 0.072" parent="base_link" child="shoulder_link"/>
+
+  <link name="${ns}shoulder_link">
+    <xacro:mesh file="${arm_meshes}/wx250s_2_shoulder.stl" xyz="0 0 -0.003" rpy="0 0 ${pi/2}" material="interbotix_black"/>
+  </link>
+
+  <xacro:arm_joint name="shoulder" axis="0 1 0" lower="${radians(-108)}" upper="${radians(114)}" effort="20"
+                   xyz="0 0 0.03865" parent="shoulder_link" child="upper_arm_link"/>
+
+  <link name="${ns}upper_arm_link">
+    <xacro:mesh file="${arm_meshes}/wx250s_3_upper_arm.stl" rpy="0 0 ${pi/2}" material="interbotix_black"/>
+  </link>
+
+  <xacro:arm_joint name="elbow" axis="0 1 0" lower="${radians(-123)}" upper="${radians(92)}" effort="15"
+                   xyz="0.04975 0 0.25" parent="upper_arm_link" child="upper_forearm_link"/>
+
+  <link name="${ns}upper_forearm_link">
+    <xacro:mesh file="${arm_meshes}/wx250s_4_upper_forearm.stl" material="interbotix_black"/>
+  </link>
+
+  <xacro:arm_joint name="forearm_roll" axis="1 0 0" lower="${-pi + pi_offset}" upper="${pi - pi_offset}" effort="2"
+                   xyz="0.175 0 0" parent="upper_forearm_link" child="lower_forearm_link"/>
+
+  <link name="${ns}lower_forearm_link">
+    <xacro:mesh file="${arm_meshes}/wx250s_5_lower_forearm.stl" rpy="${pi} 0 0" material="interbotix_black"/>
+  </link>
+
+  <xacro:arm_joint name="wrist_angle" axis="0 1 0" lower="${radians(-100)}" upper="${radians(123)}" effort="5"
+                   xyz="0.075 0 0" parent="lower_forearm_link" child="wrist_link"/>
+
+  <link name="${ns}wrist_link">
+    <xacro:mesh file="${arm_meshes}/wx250s_6_wrist.stl" rpy="0 0 ${pi/2}" material="interbotix_black"/>
+  </link>
+
+  <xacro:arm_joint name="wrist_rotate" axis="1 0 0" lower="${-pi + pi_offset}" upper="${pi - pi_offset}" effort="1"
+                   xyz="0.065 0 0" parent="wrist_link" child="gripper_link"/>
+
+  <!-- Wrist-rotate output frame (no gripper any more, the head bolts on here) -->
+  <link name="${ns}gripper_link"/>
+
+  <!-- ============================ HEAD ============================ -->
+
+  <joint name="head_mount" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <parent link="${ns}gripper_link"/>
+    <child link="${ns}head_link"/>
+  </joint>
+
+  <link name="${ns}head_link">
+    <xacro:mesh file="${head_meshes}/base_link.stl"             xyz="${head_mesh_xyz}" material="aifred_silver"/>
+    <xacro:mesh file="${head_meshes}/body_down_1.stl"           xyz="${head_mesh_xyz}" material="aifred_silver"/>
+    <xacro:mesh file="${head_meshes}/body_up_1.stl"             xyz="${head_mesh_xyz}" material="aifred_silver"/>
+    <xacro:mesh file="${head_meshes}/webcam_1.stl"              xyz="${head_mesh_xyz}" material="aifred_silver"/>
+    <xacro:mesh file="${head_meshes}/cam_link_body_1.stl"       xyz="${head_mesh_xyz}" material="interbotix_black"/>
+    <xacro:mesh file="${head_meshes}/projector_1.stl"           xyz="${head_mesh_xyz}" material="aifred_silver"/>
+    <xacro:mesh file="${head_meshes}/projector_link_body_1.stl" xyz="${head_mesh_xyz}" material="interbotix_black"/>
+  </link>
+
+  <!-- Webcam lens centre: IK end effector (looks along -z) -->
+  <joint name="camera" type="fixed">
+    <origin xyz="0.023806 0.036834 -0.054292" rpy="0 0 0"/>
+    <parent link="${ns}head_link"/>
+    <child link="${ns}camera_link"/>
+  </joint>
+  <link name="${ns}camera_link"/>
+
+  <!-- Projector lens centre (projects along -z) -->
+  <joint name="projector" type="fixed">
+    <origin xyz="0.022664 -0.025140 -0.039092" rpy="0 0 0"/>
+    <parent link="${ns}head_link"/>
+    <child link="${ns}projector_link"/>
+  </joint>
+  <link name="${ns}projector_link"/>
+
+</robot>
