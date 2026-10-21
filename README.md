@@ -20,7 +20,25 @@ roslaunch aifred_robot robot.launch
 
 # PC (ROS_MASTER_URI = Raspberry Pi)
 roslaunch aifred_robot view.launch
-rosrun aifred_robot bartender.py
+```
+
+
+```bash
+export ROS_MASTER_URI=http://10.205.3.180:11311
+gringo@helena:~$ source catkin_ws/devel/setup.bash 
+gringo@helena:~$ rosrun aifred_robot record_motion.py test
+```
+
+
+
+```bash
+# record motions by moving the head by hand (arm torque off), saved to aifred_robot/motions/
+rosrun aifred_robot record_motion.py curious          # keyframes: Enter saves a pose, q finishes
+rosrun aifred_robot record_motion.py happy --live     # continuous: Enter starts, Enter stops
+
+# play them back (in order; --speed, --mirror swaps left/right, --loop, --sleep)
+rosrun aifred_robot play_motion.py --list
+rosrun aifred_robot play_motion.py curious happy --speed 1.5
 ```
 
 ```bash
@@ -40,6 +58,9 @@ roslaunch interbotix_xsarm_descriptions remote_view.launch robot_name:=wx250s
 
 
 
+```bash
+sudo apt install ros-noetic-usb-cam
+```
 
 
 IK with the camera as end effector (`wx250s/camera_link`, looks along -z, so `pitch=0` = looking down):
