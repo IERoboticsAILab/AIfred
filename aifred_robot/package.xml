@@ -2,7 +2,7 @@
 <package format="2">
   <name>aifred_robot</name>
   <version>0.1.0</version>
-  <description>AIfred robot: Interbotix WX250s with custom base and camera/projector head. URDF, bringup launch and camera-frame IK.</description>
+  <description>AIfred robot: Interbotix WX250s with custom base and camera/projector head. URDF and bringup launch.</description>
   <maintainer email="greg.orlando77@gmail.com">GRINGOLOCO7</maintainer>
   <license>TODO</license>
 
@@ -10,11 +10,7 @@
 
   <exec_depend>interbotix_xsarm_descriptions</exec_depend>
   <exec_depend>interbotix_xs_sdk</exec_depend>
-  <exec_depend>interbotix_xs_modules</exec_depend>
   <exec_depend>robot_state_publisher</exec_depend>
-  <exec_depend>rospy</exec_depend>
   <exec_depend>rviz</exec_depend>
-  <exec_depend>tf</exec_depend>
-  <exec_depend>urdfdom_py</exec_depend>
   <exec_depend>xacro</exec_depend>
 </package>

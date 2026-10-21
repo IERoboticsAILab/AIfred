@@ -3,6 +3,4 @@ project(aifred_robot)
 
 find_package(catkin REQUIRED)
 
-catkin_python_setup()
-
 catkin_package()
