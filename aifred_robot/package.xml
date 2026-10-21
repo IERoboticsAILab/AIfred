@@ -10,6 +10,7 @@
 
   <exec_depend>interbotix_xsarm_descriptions</exec_depend>
   <exec_depend>interbotix_xs_sdk</exec_depend>
+  <exec_depend>interbotix_xs_rviz</exec_depend>
   <exec_depend>robot_state_publisher</exec_depend>
   <exec_depend>rviz</exec_depend>
   <exec_depend>xacro</exec_depend>

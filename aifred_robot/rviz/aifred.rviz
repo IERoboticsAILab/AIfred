@@ -11,6 +11,9 @@ Panels:
       - /Current View1
     Name: Views
     Splitter Ratio: 0.5
+  - Class: interbotix_xs_rviz/Interbotix Control Panel
+    Name: Interbotix Control Panel
+    RobotNameSpace: ""
 Preferences:
   PromptSaveOnExit: false
 Visualization Manager:
@@ -118,6 +121,8 @@ Window Geometry:
   Height: 900
   Hide Left Dock: false
   Hide Right Dock: true
+  Interbotix Control Panel:
+    collapsed: false
   Views:
     collapsed: true
   Width: 1500

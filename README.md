@@ -11,13 +11,36 @@ Interbotix WX250s with the AIfred base and head (camera + projector) instead of 
 ```bash
 # both machines, once
 cd ~/catkin_ws && catkin build aifred_robot && source devel/setup.bash
+```
 
+
+```bash
 # Raspberry Pi (arm connected, ROS master)
 roslaunch aifred_robot robot.launch
 
 # PC (ROS_MASTER_URI = Raspberry Pi)
 roslaunch aifred_robot view.launch
+rosrun aifred_robot bartender.py
 ```
+
+```bash
+# Raspberry Pi (arm connected, ROS master)
+roslaunch interbotix_xsarm_control xsarm_control.launch robot_model:=wx250s use_rviz:=false   motor_configs:=$(rospack find aifred_robot)/config/wx250s_aifred.yaml   mode_configs:=$(rospack find aifred_robot)/config/modes.yaml   external_urdf_loc:=""
+
+# PC (ROS_MASTER_URI = Raspberry Pi)
+roslaunch interbotix_xsarm_descriptions remote_view.launch robot_name:=wx250s
+```
+
+
+
+
+
+
+
+
+
+
+
 
 IK with the camera as end effector (`wx250s/camera_link`, looks along -z, so `pitch=0` = looking down):
 
