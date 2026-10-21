@@ -6,8 +6,10 @@
   The arm chain (waist ... wrist_rotate) is the stock wx250s one: same link and
   joint names, so the joint_states published by interbotix_xs_sdk drive it as-is.
 
-  End effector for IK: wx250s/camera_link, centre of the webcam lens, same
-  orientation as gripper_link (x forward, z up): the camera looks along -z.
+  The head's top face bolts onto the wrist-rotate output, so the camera looks
+  along the last link. End effector for IK: wx250s/camera_link, centre of the
+  webcam lens, same orientation as gripper_link: the camera looks along +x
+  (like the old gripper), so pitch=pi/2 means looking straight down.
 -->
 <robot name="aifred" xmlns:xacro="http://ros.org/wiki/xacro">
 
@@ -16,8 +18,8 @@
   <xacro:property name="arm_meshes" value="package://interbotix_xsarm_descriptions/meshes/wx250s_meshes"/>
   <xacro:property name="head_meshes" value="package://aifred_robot/meshes/head"/>
   <!-- The head meshes come from a Fusion 360 export in world coordinates; this
-       shifts them so the mounting plate (back face, centre) is the head origin. -->
-  <xacro:property name="head_mesh_xyz" value="-0.095674 0.025867 -0.383021"/>
+       shifts them so the centre of the head's top face is the head origin. -->
+  <xacro:property name="head_mesh_xyz" value="-0.1195 0.025867 -0.449388"/>
 
   <material name="interbotix_black">
     <texture filename="package://interbotix_xsarm_descriptions/meshes/interbotix_black.png"/>
@@ -57,6 +59,7 @@
 
   <link name="${ns}base_link">
     <xacro:mesh file="package://aifred_robot/meshes/base_AIfred2.stl" material="aifred_white"/>
+    <xacro:mesh file="${arm_meshes}/wx250s_1_base.stl" rpy="0 0 ${pi/2}" material="interbotix_black"/>
   </link>
 
   <xacro:arm_joint name="waist" axis="0 0 1" lower="${-pi + pi_offset}" upper="${pi - pi_offset}" effort="10"
@@ -102,8 +105,10 @@
 
   <!-- ============================ HEAD ============================ -->
 
+  <!-- head_link keeps the head's own axes (camera looks along its -z);
+       rotated so that direction is the wrist axis (+x of gripper_link) -->
   <joint name="head_mount" type="fixed">
-    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <origin xyz="0 0 0" rpy="0 ${-pi/2} 0"/>
     <parent link="${ns}gripper_link"/>
     <child link="${ns}head_link"/>
   </joint>
@@ -118,17 +123,17 @@
     <xacro:mesh file="${head_meshes}/projector_link_body_1.stl" xyz="${head_mesh_xyz}" material="interbotix_black"/>
   </link>
 
-  <!-- Webcam lens centre: IK end effector (looks along -z) -->
+  <!-- Webcam lens centre: IK end effector (looks along +x) -->
   <joint name="camera" type="fixed">
-    <origin xyz="0.023806 0.036834 -0.054292" rpy="0 0 0"/>
+    <origin xyz="-0.00002 0.036834 -0.120659" rpy="0 ${pi/2} 0"/>
     <parent link="${ns}head_link"/>
     <child link="${ns}camera_link"/>
   </joint>
   <link name="${ns}camera_link"/>
 
-  <!-- Projector lens centre (projects along -z) -->
+  <!-- Projector lens centre (projects along +x) -->
   <joint name="projector" type="fixed">
-    <origin xyz="0.022664 -0.025140 -0.039092" rpy="0 0 0"/>
+    <origin xyz="-0.001162 -0.025140 -0.105459" rpy="0 ${pi/2} 0"/>
     <parent link="${ns}head_link"/>
     <child link="${ns}projector_link"/>
   </joint>
