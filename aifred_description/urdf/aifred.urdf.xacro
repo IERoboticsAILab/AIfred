@@ -1,0 +1,416 @@
+<?xml version="1.0"?>
+<robot name="wx250s" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:arg name="robot_name" default = "wx250s"/>
+  <xacro:arg name="base_link_frame" default="base_link"/>
+  <xacro:arg name="use_world_frame" default="false"/>
+  <xacro:arg name="external_urdf_loc" default=""/>
+  <xacro:arg name="load_gazebo_configs" default="false"/>
+
+  <xacro:property name="urdf_loc" value="$(arg external_urdf_loc)"/>
+  <xacro:property name="pi_offset" value="0.00001"/>
+
+  <xacro:if value="$(arg load_gazebo_configs)">
+    <xacro:include filename="$(find interbotix_xsarm_gazebo)/config/interbotix_texture.gazebo"/>
+  </xacro:if>
+
+  <material name="interbotix_black">
+    <texture filename="package://interbotix_xsarm_descriptions/meshes/interbotix_black.png"/>
+  </material>
+
+  <xacro:if value="$(arg use_world_frame)">
+    <link name="world"/>
+    <joint name="fixed" type="fixed">
+      <parent link="world"/>
+      <child link="$(arg robot_name)/$(arg base_link_frame)"/>
+    </joint>
+  </xacro:if>
+
+  <link name="$(arg robot_name)/$(arg base_link_frame)">
+    <visual>
+      <origin rpy="0 0 ${pi/2}" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://interbotix_xsarm_descriptions/meshes/wx250s_meshes/wx250s_1_base.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="interbotix_black"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 ${pi/2}" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://interbotix_xsarm_descriptions/meshes/wx250s_meshes/wx250s_1_base.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 ${pi/2}" xyz="-0.0380446000 0.0006138920 0.0193354000"/>
+      <mass value="0.538736" />
+      <inertia ixx="0.0021150000" iyy="0.0006921000" izz="0.0025240000" ixy="-0.0000163500" ixz="0.0000006998" iyz="0.0000464200" />
+    </inertial>
+  </link>
+
+  <joint name="waist" type="revolute">
+    <axis xyz="0 0 1"/>
+    <limit effort="10" lower="${-pi + pi_offset}" upper="${pi - pi_offset}" velocity="${pi}"/>
+    <origin rpy="0 0 0" xyz="0 0 0.072"/>
+    <parent link="$(arg robot_name)/$(arg base_link_frame)"/>
+    <child link="$(arg robot_name)/shoulder_link"/>
+    <dynamics friction="0.1"/>
+  </joint>
+
+  <transmission name="trans_waist">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="waist">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="waist_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <link name="$(arg robot_name)/shoulder_link">
+    <visual>
+      <origin rpy="0 0 ${pi/2}" xyz="0 0 -0.003"/>
+      <geometry>
+        <mesh filename="package://interbotix_xsarm_descriptions/meshes/wx250s_meshes/wx250s_2_shoulder.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="interbotix_black"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 ${pi/2}" xyz="0 0 -0.003"/>
+      <geometry>
+        <mesh filename="package://interbotix_xsarm_descriptions/meshes/wx250s_meshes/wx250s_2_shoulder.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 ${pi/2}" xyz="0.0000223482 0.0000414609 0.0066287000"/>
+      <mass value="0.480879" />
+      <inertia ixx="0.0003790000" iyy="0.0005557000" izz="0.0005889000" ixy="0.0000000022" ixz="-0.0000003561" iyz="0.0000012245" />
+    </inertial>
+  </link>
+
+  <joint name="shoulder" type="revolute">
+    <axis xyz="0 1 0"/>
+    <limit effort="20" lower="${radians(-108)}" upper="${radians(114)}" velocity="${pi}"/>
+    <origin rpy="0 0 0" xyz="0 0 0.03865"/>
+    <parent link="$(arg robot_name)/shoulder_link"/>
+    <child link="$(arg robot_name)/upper_arm_link"/>
+    <dynamics friction="0.1"/>
+  </joint>
+
+  <transmission name="trans_shoulder">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="shoulder">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="shoulder_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <link name="$(arg robot_name)/upper_arm_link">
+    <visual>
+      <origin rpy="0 0 ${pi/2}" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://interbotix_xsarm_descriptions/meshes/wx250s_meshes/wx250s_3_upper_arm.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="interbotix_black"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 ${pi/2}" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://interbotix_xsarm_descriptions/meshes/wx250s_meshes/wx250s_3_upper_arm.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 ${pi/2}" xyz="0.0171605000 0.0000002725 0.1913230000"/>
+      <mass value="0.430811" />
+      <inertia ixx="0.0034630000" iyy="0.0035870000" izz="0.0004566000" ixy="-0.0000000001" ixz="-0.0000000002" iyz="0.0004272000" />
+    </inertial>
+  </link>
+
+  <joint name="elbow" type="revolute">
+    <axis xyz="0 1 0"/>
+    <limit effort="15" lower="${radians(-123)}" upper="${radians(92)}" velocity="${pi}"/>
+    <origin rpy="0 0 0" xyz="0.04975 0 0.25"/>
+    <parent link="$(arg robot_name)/upper_arm_link"/>
+    <child link="$(arg robot_name)/upper_forearm_link"/>
+    <dynamics friction="0.1"/>
+  </joint>
+
+  <transmission name="trans_elbow">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="elbow">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="elbow_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <link name="$(arg robot_name)/upper_forearm_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://interbotix_xsarm_descriptions/meshes/wx250s_meshes/wx250s_4_upper_forearm.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="interbotix_black"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://interbotix_xsarm_descriptions/meshes/wx250s_meshes/wx250s_4_upper_forearm.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.1079630000 0.0001158760 0"/>
+      <mass value="0.234589" />
+      <inertia ixx="0.0000397100" iyy="0.0008878000" izz="0.0008880000" ixy="0.0000023528" ixz="0" iyz="0" />
+    </inertial>
+  </link>
+
+  <joint name="forearm_roll" type="revolute">
+    <axis xyz="1 0 0"/>
+    <limit effort="2" lower="${-pi + pi_offset}" upper="${pi - pi_offset}" velocity="${pi}"/>
+    <origin rpy="0 0 0" xyz="0.175 0 0"/>
+    <parent link="$(arg robot_name)/upper_forearm_link"/>
+    <child link="$(arg robot_name)/lower_forearm_link"/>
+    <dynamics friction="0.1"/>
+  </joint>
+
+  <transmission name="trans_forearm_roll">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="forearm_roll">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="forearm_roll_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <link name="$(arg robot_name)/lower_forearm_link">
+    <visual>
+      <origin rpy="${pi} 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://interbotix_xsarm_descriptions/meshes/wx250s_meshes/wx250s_5_lower_forearm.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="interbotix_black"/>
+    </visual>
+    <collision>
+      <origin rpy="${pi} 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://interbotix_xsarm_descriptions/meshes/wx250s_meshes/wx250s_5_lower_forearm.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="${pi} 0 0" xyz="0.0374395000 0.0052225200 0"/>
+      <mass value="0.220991" />
+      <inertia ixx="0.0000636900" iyy="0.0001677000" izz="0.0001834000" ixy="-0.0000229200" ixz="0" iyz="0" />
+    </inertial>
+  </link>
+
+ <joint name="wrist_angle" type="revolute">
+    <axis xyz="0 1 0"/>
+    <limit effort="5" lower="${radians(-100)}" upper="${radians(123)}" velocity="${pi}"/>
+    <origin rpy="0 0 0" xyz="0.075 0 0"/>
+    <parent link="$(arg robot_name)/lower_forearm_link"/>
+    <child link="$(arg robot_name)/wrist_link"/>
+    <dynamics friction="0.1"/>
+  </joint>
+
+  <transmission name="trans_wrist_angle">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="wrist_angle">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="wrist_angle_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <link name="$(arg robot_name)/wrist_link">
+    <visual>
+      <origin rpy="0 0 ${pi/2}" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://interbotix_xsarm_descriptions/meshes/wx250s_meshes/wx250s_6_wrist.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="interbotix_black"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 ${pi/2}" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="package://interbotix_xsarm_descriptions/meshes/wx250s_meshes/wx250s_6_wrist.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 ${pi/2}" xyz="0.0423600000 -0.0000106630 0.0105770000"/>
+      <mass value="0.084957" />
+      <inertia ixx="0.0000308200" iyy="0.0000282200" izz="0.0000315200" ixy="0.0000000191" ixz="0.0000000023" iyz="0.0000025481" />
+    </inertial>
+  </link>
+
+  <!-- AIfred head: replaces the wrist_rotate motor and the gripper.
+       The head meshes were exported from CAD with an arbitrary origin, so the head
+       is placed by putting the back face of its mounting plate (CAD x = 0.15997,
+       centered at y = 0.005692, z = 0.400532) at head_mount_x along wrist_link's x axis. -->
+
+  <xacro:property name="head_mount_x" value="0.065"/>
+  <xacro:property name="head_mesh_dir" value="package://interbotix_xsarm_descriptions/meshes/aifred_meshes"/>
+
+  <material name="silver">
+    <color rgba="0.700 0.700 0.700 1.000"/>
+  </material>
+
+  <joint name="head_mount" type="fixed">
+    <origin rpy="0 0 0" xyz="${head_mount_x - 0.15997} -0.005692 -0.400532"/>
+    <parent link="$(arg robot_name)/wrist_link"/>
+    <child link="$(arg robot_name)/head_mount_link"/>
+  </joint>
+
+  <link name="$(arg robot_name)/head_mount_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="${head_mesh_dir}/base_link.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="silver"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="${head_mesh_dir}/base_link.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.16147000792413785 0.005693053609813656 0.4003205773306801"/>
+      <mass value="0.03498801320160599"/>
+      <inertia ixx="9e-06" iyy="5e-06" izz="5e-06" ixy="0" iyz="0" ixz="0"/>
+    </inertial>
+  </link>
+
+  <joint name="head_base_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0.16297 0.005692 0.400532"/>
+    <parent link="$(arg robot_name)/head_mount_link"/>
+    <child link="$(arg robot_name)/head_link"/>
+  </joint>
+
+  <link name="$(arg robot_name)/head_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="-0.16297 -0.005692 -0.400532"/>
+      <geometry>
+        <mesh filename="${head_mesh_dir}/head_1.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="silver"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="-0.16297 -0.005692 -0.400532"/>
+      <geometry>
+        <mesh filename="${head_mesh_dir}/head_1.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.016384387221553526 -0.0007535172421940343 0.0016904241903101802"/>
+      <mass value="0.8339546085781029"/>
+      <inertia ixx="0.002151" iyy="0.001215" izz="0.001219" ixy="1e-06" iyz="4e-06" ixz="4e-06"/>
+    </inertial>
+  </link>
+
+  <joint name="webcam_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0.022292 0.045989 -0.0412"/>
+    <parent link="$(arg robot_name)/head_link"/>
+    <child link="$(arg robot_name)/webcam_link"/>
+  </joint>
+
+  <link name="$(arg robot_name)/webcam_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="-0.185262 -0.051681 -0.359332"/>
+      <geometry>
+        <mesh filename="${head_mesh_dir}/Webcam_v1_1.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="interbotix_black"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="-0.185262 -0.051681 -0.359332"/>
+      <geometry>
+        <mesh filename="${head_mesh_dir}/Webcam_v1_1.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.005076742216302971 -0.018585245539558946 -0.0017029000435133113"/>
+      <mass value="0.016972726448014307"/>
+      <inertia ixx="3e-06" iyy="1e-06" izz="4e-06" ixy="0" iyz="0" ixz="0"/>
+    </inertial>
+  </link>
+
+  <joint name="camera_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="-0.005049 -0.00965 -0.0084"/>
+    <parent link="$(arg robot_name)/webcam_link"/>
+    <child link="$(arg robot_name)/camera_link"/>
+  </joint>
+
+  <link name="$(arg robot_name)/camera_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="-0.180213 -0.042031 -0.350932"/>
+      <geometry>
+        <mesh filename="${head_mesh_dir}/cam_link_1.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="silver"/>
+    </visual>
+    <inertial>
+      <origin rpy="0 0 0" xyz="0 0 -0.0005"/>
+      <mass value="0.0007872568081511667"/>
+      <inertia ixx="1e-08" iyy="1e-08" izz="1e-08" ixy="0" iyz="0" ixz="0"/>
+    </inertial>
+  </link>
+
+  <joint name="projector_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0.027243 -0.007585 0.00745"/>
+    <parent link="$(arg robot_name)/head_link"/>
+    <child link="$(arg robot_name)/projector_link"/>
+  </joint>
+
+  <link name="$(arg robot_name)/projector_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="-0.190213 0.001893 -0.407982"/>
+      <geometry>
+        <mesh filename="${head_mesh_dir}/projector_1.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="interbotix_black"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="-0.190213 0.001893 -0.407982"/>
+      <geometry>
+        <mesh filename="${head_mesh_dir}/projector_1.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.011107543867003328 0.0017976340095537033 0.0013310323965046167"/>
+      <mass value="1.3391123928711435"/>
+      <inertia ixx="0.001722" iyy="0.00091" izz="0.000922" ixy="0" iyz="7e-06" ixz="0"/>
+    </inertial>
+  </link>
+
+  <joint name="projector_lens_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="-0.0111 -0.01805 -0.03715"/>
+    <parent link="$(arg robot_name)/projector_link"/>
+    <child link="$(arg robot_name)/projector_lens_link"/>
+  </joint>
+
+  <link name="$(arg robot_name)/projector_lens_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="-0.179113 0.019943 -0.370832"/>
+      <geometry>
+        <mesh filename="${head_mesh_dir}/proj_link_1.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="silver"/>
+    </visual>
+    <inertial>
+      <origin rpy="0 0 0" xyz="0 0 -0.00285"/>
+      <mass value="0.00776996925000002"/>
+      <inertia ixx="1e-08" iyy="1e-08" izz="1e-08" ixy="0" iyz="0" ixz="0"/>
+    </inertial>
+  </link>
+
+  <xacro:if value="${urdf_loc != ''}">
+    <xacro:include filename="${urdf_loc}"/>
+  </xacro:if>
+
+</robot>
