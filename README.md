@@ -5,7 +5,7 @@ ON BOTH RPI AND PC RUN THE `auto_edit_interbotix.sh` that you find in `aifred_de
 ON RPI:
 
 ```bash
-roslaunch interbotix_xsarm_control xsarm_control.launch robot_model:=wx250s use_sim:=true use_rviz:=false
+roslaunch interbotix_xsarm_control xsarm_control.launch robot_model:=aifred use_sim:=true use_rviz:=false
 ```
 
 

@@ -250,7 +250,8 @@
   <!-- AIfred head: replaces the wrist_rotate motor and the gripper.
        The head meshes were exported from CAD with an arbitrary origin, so the head
        is placed by putting the back face of its mounting plate (CAD x = 0.15997,
-       centered at y = 0.005692, z = 0.400532) at head_mount_x along wrist_link's x axis. -->
+       centered at y = 0.005692, z = 0.400532) at head_mount_x along wrist_link's x axis.
+       head_mount_link's frame sits at that point; its mesh is offset back by the CAD coordinates. -->
 
   <xacro:property name="head_mount_x" value="0.065"/>
   <xacro:property name="head_mesh_dir" value="package://interbotix_xsarm_descriptions/meshes/aifred_meshes"/>
@@ -260,34 +261,34 @@
   </material>
 
   <joint name="head_mount" type="fixed">
-    <origin rpy="0 0 0" xyz="${head_mount_x - 0.15997} -0.005692 -0.400532"/>
+    <origin rpy="0 0 0" xyz="${head_mount_x} 0 0"/>
     <parent link="$(arg robot_name)/wrist_link"/>
     <child link="$(arg robot_name)/head_mount_link"/>
   </joint>
 
   <link name="$(arg robot_name)/head_mount_link">
     <visual>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <origin rpy="0 0 0" xyz="-0.15997 -0.005692 -0.400532"/>
       <geometry>
         <mesh filename="${head_mesh_dir}/base_link.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="silver"/>
     </visual>
     <collision>
-      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <origin rpy="0 0 0" xyz="-0.15997 -0.005692 -0.400532"/>
       <geometry>
         <mesh filename="${head_mesh_dir}/base_link.stl" scale="0.001 0.001 0.001"/>
       </geometry>
     </collision>
     <inertial>
-      <origin rpy="0 0 0" xyz="0.16147000792413785 0.005693053609813656 0.4003205773306801"/>
+      <origin rpy="0 0 0" xyz="0.00150000792413785 0.000001053609813656 -0.0002114226693199"/>
       <mass value="0.03498801320160599"/>
       <inertia ixx="9e-06" iyy="5e-06" izz="5e-06" ixy="0" iyz="0" ixz="0"/>
     </inertial>
   </link>
 
   <joint name="head_base_joint" type="fixed">
-    <origin rpy="0 0 0" xyz="0.16297 0.005692 0.400532"/>
+    <origin rpy="0 0 0" xyz="0.003 0 0"/>
     <parent link="$(arg robot_name)/head_mount_link"/>
     <child link="$(arg robot_name)/head_link"/>
   </joint>
