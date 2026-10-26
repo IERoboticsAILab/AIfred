@@ -13,9 +13,9 @@ Each run just overwrites the files with your latest versions.
 # How to run it
 Make it executable once and run it:
 ```bash
-chmod +x install_aifred.sh
-./install_aifred.sh                      # workspace at ~/interbotix_ws
-#./install_aifred.sh /path/to/other_ws    # workspace somewhere else
+chmod +x auto_edit_interbotix.sh
+./auto_edit_interbotix.sh                      # workspace at ~/interbotix_ws
+#./auto_edit_interbotix.sh /path/to/other_ws    # workspace somewhere else
 ```
 
 Launch as usual:
