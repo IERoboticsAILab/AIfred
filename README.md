@@ -70,7 +70,7 @@ This package create AIfred robot modle into the interbotics workspace. Run the a
 This package boot up the camera topic and publish the camera raw view.
 
 ```bash
-roslaunch aifred_cam camera.launch      # publishes /aifred_cam/image_raw
+roslaunch aifred_cam camera.launch      # publishes /aifred_cam/image_raw (RUNS AUTOMATICALLY IN BRING UP SCRIPT)
 ```
 
 ### AIfred 2.0 microphone (wake up world)
