@@ -1,18 +1,77 @@
-# aifred_robot
+<h1 align="center">AIfred2.0</h1>
 
-ON BOTH RPI AND PC RUN THE `auto_edit_interbotix.sh` that you find in `aifred_descroption`
+### Virtual environment
 
-ON RPI:
+Run these from the AIfred repository, after sourcing the ROS/catkin workspace.
+The venv uses ROS Noetic's system Python (`/usr/bin/python3`) so the compiled ROS modules stay compatible.
 
+**Recreate the venv (anyone cloning the repo)**
 ```bash
-roslaunch interbotix_xsarm_control xsarm_control.launch robot_model:=aifred use_sim:=true use_rviz:=false
+export PATH="$HOME/.local/bin:$PATH"
+uv venv --python /usr/bin/python3 --system-site-packages
+uv sync --locked --python /usr/bin/python3
+source .venv/bin/activate
+```
+
+**Add or remove a dependency (it's saved to `pyproject.toml` and `uv.lock` automatically)**
+```bash
+uv add <package>       # e.g. uv add opencv-python
+uv remove <package>
+```
+Commit `pyproject.toml` and `uv.lock` after every change. Don't use `pip install`, because it doesn't record anything.
+
+**First-time project setup (already done by outors)**
+```bash
+uv init --bare --python /usr/bin/python3
+uv venv --python /usr/bin/python3 --system-site-packages
 ```
 
 
-ON PC:
+
+
+
+
+
+
+### Create a package
+```bash
+cd ~/catkin_ws/src/AIfred
+catkin_create_pkg aifred_<pkg> rospy std_msgs
+```
+
+add nodes
 
 ```bash
-export ROS_MASTER_URI=http://<ip_raspberrypi>:11311
-gringo@helena:~$ source catkin_ws/devel/setup.bash 
-roslaunch interbotix_xsarm_descriptions remote_view.launch robot_name:=aifred
+touch aifred_<pkg>/src/<node>.py # start with: #!/usr/bin/env python3
+chmod +x aifred_<pkg>/src/<node>.py
 ```
+
+Register the script in `aifred_mic/CMakeLists.txt`
+```bash
+catkin_install_python(PROGRAMS scripts/mic_node.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
+```
+
+
+
+
+
+
+
+
+
+
+
+### AIfred 2.0 description
+This package create AIfred robot modle into the interbotics workspace. Run the auto edit bash file to be able to call the interbotics scripts with AIfred robot model.
+
+### AIfred 2.0 camera
+This package boot up the camera topic and publish the camera raw view.
+
+```bash
+roslaunch aifred_cam camera.launch      # publishes /aifred_cam/image_raw
+```
+
+### AIfred 2.0 microphone (wake up world)
+This package uses the webcam microphone to listen to user comands. When user say the trigger word "ALFRED", it then publish the sentence to a topic.
