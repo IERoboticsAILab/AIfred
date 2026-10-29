@@ -247,7 +247,7 @@
     </inertial>
   </link>
 
-  <!-- AIfred head: replaces the wrist_rotate motor and the gripper.
+  <!-- AIfred head: replaces the gripper and is mounted on the wrist_rotate motor horn.
        The head meshes were exported from CAD with an arbitrary origin, so the head
        is placed by putting the back face of its mounting plate (CAD x = 0.15997,
        centered at y = 0.005692, z = 0.400532) at head_mount_x along wrist_link's x axis.
@@ -260,11 +260,24 @@
     <color rgba="0.700 0.700 0.700 1.000"/>
   </material>
 
-  <joint name="head_mount" type="fixed">
+  <joint name="wrist_rotate" type="revolute">
+    <axis xyz="1 0 0"/>
+    <limit effort="1" lower="${-pi}" upper="${pi}" velocity="${pi}"/>
     <origin rpy="0 0 0" xyz="${head_mount_x} 0 0"/>
     <parent link="$(arg robot_name)/wrist_link"/>
     <child link="$(arg robot_name)/head_mount_link"/>
+    <dynamics friction="0.1"/>
   </joint>
+
+  <transmission name="trans_wrist_rotate">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="wrist_rotate">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="wrist_rotate_motor">
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
 
   <link name="$(arg robot_name)/head_mount_link">
     <visual>
@@ -361,6 +374,17 @@
       <inertia ixx="1e-08" iyy="1e-08" izz="1e-08" ixy="0" iyz="0" ixz="0"/>
     </inertial>
   </link>
+
+  <!-- End-effector frame for the Python API (M in mr_descriptions.py): same point as camera_link,
+       aligned with base_link at the home pose (x forward, y left, z up), like a gripper.
+       The lens looks out along -z, so roll = pitch = 0 keeps the camera parallel to the floor. -->
+  <joint name="ee_camera_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <parent link="$(arg robot_name)/camera_link"/>
+    <child link="$(arg robot_name)/ee_camera_link"/>
+  </joint>
+
+  <link name="$(arg robot_name)/ee_camera_link"/>
 
   <joint name="projector_joint" type="fixed">
     <origin rpy="0 0 0" xyz="0.027243 -0.007585 0.00745"/>

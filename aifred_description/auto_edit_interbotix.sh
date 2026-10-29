@@ -17,23 +17,24 @@ mkdir -p "$XSARMS/interbotix_xsarm_descriptions/meshes/aifred_meshes"
 cp "$SRC"/meshes/* "$XSARMS/interbotix_xsarm_descriptions/meshes/aifred_meshes/"
 cp "$SRC"/config/aifred.yaml "$XSARMS/interbotix_xsarm_control/config/"
 
-# 2. Kinematics for the Python API (added only once)
-if ! grep -q "^class aifred:" "$MODULES/mr_descriptions.py"; then
+# 2. Kinematics for the Python API (old aifred entry is replaced on every run)
+awk '/^class aifred:/{skip=1; next} skip && /^class /{skip=0} !skip' "$MODULES/mr_descriptions.py" > "$MODULES/mr_descriptions.py.tmp"
+mv "$MODULES/mr_descriptions.py.tmp" "$MODULES/mr_descriptions.py"
 cat >> "$MODULES/mr_descriptions.py" <<'EOF'
-
 class aifred:
     Slist = np.array([[0.0, 0.0, 1.0, 0.0, 0.0, 0.0],
                       [0.0, 1.0, 0.0, -0.11065, 0.0, 0.0],
                       [0.0, 1.0, 0.0, -0.36065, 0.0, 0.04975],
                       [1.0, 0.0, 0.0, 0.0, 0.36065, 0.0],
-                      [0.0, 1.0, 0.0, -0.36065, 0.0, 0.29975]]).T
+                      [0.0, 1.0, 0.0, -0.36065, 0.0, 0.29975],
+                      [1.0, 0.0, 0.0, 0.0, 0.36065, 0.0]]).T
 
-    M = np.array([[1.0, 0.0, 0.0, 0.36775],
-                  [0.0, 1.0, 0.0, 0.0],
-                  [0.0, 0.0, 1.0, 0.36065],
+    # End-effector = ee_camera_link, home pose in base_link
+    M = np.array([[1.0, 0.0, 0.0, 0.384993],
+                  [0.0, 1.0, 0.0, 0.036339],
+                  [0.0, 0.0, 1.0, 0.31105],
                   [0.0, 0.0, 0.0, 1.0]])
 EOF
-fi
 
 # 3. Simulator: warn instead of crash on the gripper entry in modes.yaml
 sed -i 's/self.robot_set_joint_operating_mode(sgl, /self.robot_set_operating_modes("single", sgl, /' "$SDK_SIM"

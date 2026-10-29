@@ -5,7 +5,7 @@
     - `meshes/*` goes to `interbotix_xsarm_descriptions/meshes/aifred_meshes/`
     - `config/aifred.yaml` goes to `interbotix_xsarm_control/config/`
 
-2. Adds the aifred kinematics to mr_descriptions.py so the Python API works. It skips this if the entry is already there.
+2. Adds the aifred kinematics to mr_descriptions.py so the Python API works. It replaces the old entry if one is already there.
 3. Patches the simulator so `use_sim:=true` doesn't crash on the gripper entry in modes.yaml.
 
 Each run just overwrites the files with your latest versions.
