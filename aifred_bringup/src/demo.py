@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 
 from interbotix_xs_modules.arm import InterbotixManipulatorXS
 import numpy as np
@@ -46,8 +47,6 @@ def main():
     bot.arm.set_single_joint_position("wrist_angle", 0,         moving_time=0.9)
     bot.arm.set_single_joint_position("wrist_angle", np.pi/2.0                 )
     bot.arm.set_single_joint_position("wrist_angle", 0                         )
-
-
 
     bot.arm.go_to_sleep_pose()
 
